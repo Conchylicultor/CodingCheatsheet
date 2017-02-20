@@ -1,25 +1,25 @@
 ========= #Base code
 ====== ##Hello world
-=== Cpp
-=== Java
-=== Python
+=== cpp
+=== java
+=== python
 ========= #Primitives, operators
 ====== ##Type checking and deduction
-=== Cpp
+=== cpp
 decltype(a->x) y;   // type of y is double (declared type)
 decltype((a->x)) z = y; // type of z is const double& (lvalue expression)
-=== Java
-=== Python
+=== java
+=== python
 type(o) is str
 isinstance(o, str)
 ====== ##Formatting/alternate representation
-=== Cpp
+=== cpp
 10u // Unsigned
 10uLL // Unsigned long long
 10'000.0 // double // ' since C++14
 0.f // Float
 0xFF00
 0b1111'0000 // 0b since C++14
-=== Java
-=== Python
+=== java
+=== python
 1_000.0  # _ since python 3.6
