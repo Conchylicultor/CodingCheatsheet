@@ -34,6 +34,39 @@ public class HelloWorld
 === python
 if __name__ == '__main__':
     print('Hello {} humans'.format(4))
+====== Switch
+=== cpp
+switch (value)  // Only works with integer (or enums)
+{
+    case 1:
+        // ...
+        break;
+    default:
+        // ...
+}
+=== java
+switch (month)  // Also works with String
+{
+    case "January":
+        // ...
+        break;
+    default:
+        // ...
+}
+=== python
+====== Example
+=== cpp
+enum e {a, b, c=3}; // enum class in C++11
+=== java
+public enum Day {MONDAY, TUESDAY} // No ;
+=== python
+class Day(enum.Enum):  # Since 3.4
+    MON = enum.auto()
+    TUE = enum.auto()  # auto() since 3.6, before explicit was better than implicit...
+
+Day = enum.Enum('Day', 'MON, TUE, WED')  # as collections.namedtuple
+
+Mode = enum.Flag('Mode', 'r, w')  # Since 3.6, Flags compatible with &, |, ^, ~
 ========= #Primitives, operators
 ====== ##Type checking and deduction
 === cpp
@@ -54,3 +87,8 @@ isinstance(o, str)
 === java
 === python
 1_000.0  # _ since python 3.6
+========= Other
+====== Example
+=== cpp
+=== java
+=== python
