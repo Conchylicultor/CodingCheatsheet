@@ -128,7 +128,9 @@ $(document).ready(function(){
     };
     var content = [];
 
-    // TODO: Add a table of content
+    // TODO: Add a table of content (would be great to have that as a lateral menu)
+
+    // TODO: Add option to dynamically select the columns
 
     for(var i = 0; i < mainSections.length; i++)
     {

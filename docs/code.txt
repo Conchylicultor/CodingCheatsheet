@@ -32,6 +32,8 @@ public class HelloWorld
 // WARNING: == compare refs, not values (ex: String). No operators overloading
 
 === python
+if __name__ == "__main__":
+    print('Hello {} humans'.format(4))
 ========= #Primitives, operators
 ====== ##Type checking and deduction
 === cpp
