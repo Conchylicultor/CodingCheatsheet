@@ -151,9 +151,6 @@ $(document).ready(function(){
                 content.push("<td><pre><code class=\"" + columnOrder[k] + "\">");
                 content.push(escapeHtml(currentSub.columns[columnOrder[k]]));  // TODO: Escape characteres
                 content.push("</code></pre></td>");
-
-                console.log('Language: ' + columnOrder[k]);
-
             }
             content.push("</tr>");
         }
