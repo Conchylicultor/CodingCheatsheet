@@ -1,7 +1,36 @@
 ========= #Base code
 ====== ##Hello world
 === cpp
+#import <iostream>
+#import <cstdio>
+#import <vector>
+
+int foo(const std::vector& v)
+{
+    for(size_t i = 0 ; i < v.size() ; ++i)
+    {}
+    return 0;
+}
+
+int main(int argc, char** argv)
+{
+    std::cout << "Hello " << 4 << " humans"<< std::endl;
+    printf("Hello %d %s\n", 4, "humans");
+    return 0; // EXIT_SUCCESS (defined in stdlib)
+}
 === java
+import java.lang.Math;
+
+public class HelloWorld
+{
+    public static void main (String[] args)  // WARNING: think PUBLIC, think STATIC
+    {
+        System.out.println("Hello");
+    }
+}
+
+// WARNING: == compare refs, not values (ex: String). No operators overloading
+
 === python
 ========= #Primitives, operators
 ====== ##Type checking and deduction

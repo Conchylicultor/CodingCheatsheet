@@ -40,6 +40,24 @@ function readTextFileJquery(filename){
 // </body>
 
 
+var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
+
+
 class MainSection {
     constructor(name) {
         this.title = name;
@@ -129,7 +147,7 @@ $(document).ready(function(){
             for(var k = 0; k < columnOrder.length; k++)
             {
                 content.push("<td><pre><code class=\"" + columnOrder[k] + "\">");
-                content.push(currentSub.columns[columnOrder[k]]);  // TODO: Escape characteres
+                content.push(escapeHtml(currentSub.columns[columnOrder[k]]));  // TODO: Escape characteres
                 content.push("</code></pre></td>");
 
                 console.log('Language: ' + columnOrder[k]);
@@ -141,7 +159,7 @@ $(document).ready(function(){
     }
 
     $("#coding_table").append(content.join('\n'))
-    $('pre code').each(function(i, block) {
+    $('pre code').each(function(i, block) {  // Update the code highlighting
         hljs.highlightBlock(block);
     });
 });
