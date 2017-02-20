@@ -1,5 +1,5 @@
-========= #Base code
-====== ##Hello world
+========= Base code
+====== Hello world
 === cpp
 #import <iostream>
 #import <cstdio>
@@ -54,7 +54,49 @@ switch (month)  // Also works with String
         // ...
 }
 === python
-====== Example
+====== Loops
+=== cpp
+for (const std::string& s : myList)
+{
+}
+for(auto x : v); // Work with copy
+for(auto& x : v);
+for(auto const& : v); // Work with const reference
+
+continue;
+break;
+=== java
+for (String s : myList) {
+}
+
+continue;
+break;
+=== python
+for x in my_list:
+    if x == target:
+        break
+else:  # No break or empty list
+    print('target not found')
+
+for i in range(100):  # xrange for 2.6
+    pass
+
+continue
+break
+========= Primitives, operators
+====== Primitives
+=== cpp
+bool b = true;
+std::string s = "Hello";
+=== java
+boolean b = true;
+String s = "Hello"
+=== python
+b = True
+s = 'Hello'
+
+# Types: bool, str, int, float, list, tuple, dict, set,...
+====== Enum
 === cpp
 enum e {a, b, c=3}; // enum class in C++11
 === java
@@ -67,8 +109,7 @@ class Day(enum.Enum):  # Since 3.4
 Day = enum.Enum('Day', 'MON, TUE, WED')  # as collections.namedtuple
 
 Mode = enum.Flag('Mode', 'r, w')  # Since 3.6, Flags compatible with &, |, ^, ~
-========= #Primitives, operators
-====== ##Type checking and deduction
+====== Type checking and deduction
 === cpp
 decltype(a->x) y;   // type of y is double (declared type)
 decltype((a->x)) z = y; // type of z is const double& (lvalue expression)
@@ -76,6 +117,13 @@ decltype((a->x)) z = y; // type of z is const double& (lvalue expression)
 === python
 type(o) is str
 isinstance(o, str)
+====== Functions/lambda
+=== cpp
+std::function<void(int)> f = fct; // Store a function
+auto f = std::bind(fct, 42, std::placeholders::_1);  // Prefer lambda instead
+=== java
+=== python
+f = functools.partial(fct, 42, arg2=43)
 ====== ##Formatting/alternate representation
 === cpp
 10u // Unsigned
@@ -84,6 +132,8 @@ isinstance(o, str)
 0.f // Float
 0xFF00
 0b1111'0000 // 0b since C++14
+
+size_t length = 1'000'000 * nb_row;  // Warning: the computation is done as int. Risk of overflow !
 === java
 === python
 1_000.0  # _ since python 3.6
