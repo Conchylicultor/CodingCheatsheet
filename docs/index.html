@@ -8,26 +8,17 @@
     <script src="highlight/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
-    <script type="text/javascript">
-    function LoadFile() {
-        var oFrame = document.getElementById("frmFile");
-        var strRawContents = oFrame.contentWindow.document.body.childNodes[0].innerHTML;
-        while (strRawContents.indexOf("\r") >= 0)
-            strRawContents = strRawContents.replace("\r", "");
-        var arrLines = strRawContents.split("\n");
-        alert("File " + oFrame.src + " has " + arrLines.length + " lines");
-        for (var i = 0; i < arrLines.length; i++) {
-            var curLine = arrLines[i];
-            alert("Line #" + (i + 1) + " is: '" + curLine + "'");
-        }
-    }
-    </script>
+    <script src="jquery-3.1.1.min.js"></script>
+
+    <script src="format.js"></script>
 </head>
 
 <body>
-<iframe id="frmFile" src="test.txt" onload="LoadFile();" style="display: none;"></iframe>
 
 <h1>CodingCheatsheet</h1>
+
+<div id="coding_table">
+</div>
 
 <table>
   <tr>
