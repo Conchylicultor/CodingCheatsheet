@@ -10,7 +10,7 @@ This cheatsheet is available online [here](http://e-pot.xyz/CodingCheatsheet/) (
   </tr>
 
   <tr>
-    <td colspan="2">Title</td>
+    <td colspan="2">Hello world</td>
   </tr>
   <tr>
     <td><pre lang="cpp">
@@ -21,8 +21,6 @@ int main(int argc, char** argv)
     </pre></td>
 
     <td><pre lang="python">
-import modulename as mn
-
 if __name__ == '__main__':
     print('Hi!')
     </pre></td>

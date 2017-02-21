@@ -10,6 +10,8 @@ h1 {
 #table_of_content {
     float: left;
     width: 16%;
+    height: 90%;
+    overflow: scroll;
     font-size: 0.85em;
     position: fixed;
 }

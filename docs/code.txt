@@ -158,10 +158,10 @@ operator MyType () const; // Custom cast
 float newVar = (float)oldVar; // C like syntax
 === python
 str(x)
-int(x) // associated __int__(self) to overload
-float(x) // __float__
+int(x) # associated __int__(self) to overload
+float(x) # __float__
 bin(6) # Return string '0b110', x=int('0b110', base=2)
-list(x) // No __list__ but convertible if iterable
+list(x) # No __list__ but convertible if iterable
 ===============================================
 ====== Binary/ranges
 === cpp
@@ -212,7 +212,7 @@ void operator new
 void operator new []
 A* operator ->(); // Must return ptr, obj or ref
 void operator++(int); // Can accept an argument (ex: x++(3))
-void operator[](int index); // Only one arg (contrary to Python), can be anything (ex: sting key)
+void operator[](int index); // Only one arg (contrary to Python), can be anything (ex: string key)
 void operator()(Args...);
 bool operator >=(const T& other) const; // WARNING: Don't forget const when necessary (comparison operators)
 
@@ -229,6 +229,7 @@ bool operator >=(const T& other) const; // WARNING: Don't forget const when nece
 divmod(x, y) # return the pair (x // y, x % y)
 
 def __iadd__(self, other): # +=  (i stand for in-place)
+    return self  # Don't forget
 
 # right-side ops, ex: __rsub__ allows (4 - my_obj)
 #   - only used if (4).__sub__(my_obj) don't exist
@@ -254,11 +255,45 @@ def __getitem__(self, item):  # For x['a',...,3:5]
 ===============================================
 ====== Functions/lambda
 === cpp
+// Pointer on functions
+void (*name)(int) = fct;
+
+[&] (int attr) -> int {  // In practice the return value can often be automatically deduced
+    return attr;
+}
+[]   // no variables defined. Attempting to use any external variables in the lambda is an error.
+[&]   // any external variable is implicitly captured by reference if used
+[=, x, &z]   // z is explicitly captured by reference. X by value, Other variables will be captured by value
+[this] // Capture the this ptr
+// Warning: sometimes need to add keyword mutable (TODO: When ?)
+
+std::function<void(int,int)> f = myFct;
+std::bind : Wrap a function with some of its parameters fixed
+
 std::function<void(int)> f = fct; // Store a function
 auto f = std::bind(fct, 42, std::placeholders::_1);  // Prefer lambda instead
 === java
+// Anonymous classes
+someObject.addMouseListener(new MouseAdapter() {
+    @override
+    public void mouseClicked(MouseEvent e) {
+        ...//Event listener implementation goes here...
+    }
+});
+// Other common pattern
+someObject.addMouseListener(this);
+
+// On Java 8, lambda have been added
+.map(p -> p.getEmailAddress())
+t -> {return t+1;}
 === python
-f = functools.partial(fct, 42, arg2=43)
+def a(x):
+   return 3
+b = a
+b = lambda x : 3  # Same but PEP8 discourage the use of lambda (stack trace more difficult to debug)
+
+# Equivalent of std::bind
+new_fct = functools.partial(fct, arg1, arg2, pos=arg3)
 ===============================================
 ====== ##Formatting/alternate representation
 === cpp
@@ -389,7 +424,7 @@ c = Color(255, 0, 124)
 ================================================================================
 ========= Class
 ===============================================
-====== Inheritance and constructors
+====== Constructors and Inheritance
 === cpp
 class A : public B, protected C
 // All public C member will be protected on A
@@ -412,10 +447,10 @@ public:
     A& op=(const A&);  // Copy assignment operator
     ~A();              // Destructor
     A(A&&);            // Move constructor
-    A& operator=(A&&); // Move assignment operator
+    A& operator=(A&& a)// Move assignment operator
     {
         // (doesn’t allocate new resources)
-        m_a = std::move(A.m_a);
+        m_a = std::move(a.m_a);
         return *this;
     }
     // copy and move assignment operator return *this
@@ -445,8 +480,8 @@ public class A extends MyParent implement MyInterface
         b = 5;
     }
 
-    private static int doSomething(int x) {...}
-}
+    private static int doSomething(int x)
+    {...}
 
 }  // No ending ;
 === python
@@ -563,6 +598,55 @@ __slots__ = ['x', 'y']  # Optimize the class (reduce the memory allocation for e
 ================================================================================
 ========= Other
 ===============================================
+====== Exceptions
+=== cpp
+try
+{
+    throw Exception();  // In C++, exceptions can be any objects (int,...)
+    // common to inherit from std::exception and override const char* what()
+}
+catch (Exception& e)  // Can only catch one exception
+{
+    cout << e.what() << endl;
+}
+catch (...)
+{
+    // Default exception
+} // No finally in c++
+=== java
+try{
+    // If return here, the value is stored, then finally is called, then the stored value is returned
+} catch(ArrayIndexOutOfBoundsException e) {
+    // ...
+} catch(IOException|SQLException e) { // Catch 2 exceptions
+    e.printStackTrace();
+}catch(Exception e){
+    // ...
+} finally {
+    // ...
+}
+
+// If not surrounded by try {} catch {}, the function must explicitly declare: throw
+
+void f() throw E // E inherit of Exception extends Throwable
+{
+}
+
+// Throwable is the interface (Should not be catch (except eventually in main() ))
+// Exception is the class
+=== python
+try:
+    raise AttributeError
+except IOError as e:  # (KeyboardInterrupt, EOFError) as e:  # For multiple exceptions at once
+    pass
+except: # OR: except Exception as e:
+    pass
+else: # If no exceptions
+    pass
+finally: # In any case (even if return statement)
+    pass
+
+===============================================
 ====== Thread and concurency
 === cpp
 // Low level: launch a callable (fct, fct Obj, lambda)
@@ -598,6 +682,29 @@ std::future f = std::async(fct, arg1);  // WARNING: blocking if we don't capture
 std::atomic<char> x; // Read/write are thread safe
 === java
 === python
+===============================================
+====== Random numbers / Maths
+=== cpp
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<> dis(0, max_included);
+
+int number = dis(gen);  // TODO: How to generate random numbers without having to forwards two variables (dis and gen) ?
+
+// Floor a number to x decimal
+int a = static_cast<int>(d*precision); // (int precision = 1000)
+double q = static_cast<float>(a)/precision;
+
+// float = int / int; // float will be truncated (ex: float a = 5/2; vs 5.f / 2)
+// float = float/int or int/float; int implicitly converted to float before div
+=== java
+=== python
+x = random.randrange(10)  # [0, 9]
+x = random.randint(0,10)  # [0,10] (WARNING: confusion with np.randint() where max is excusive)
+
+math.isclose(a, b)  # float equality (since 3.4)
+
+round(x, 2) # Round to 2 decimal points
 ================================================================================
 ========= Other
 ===============================================
