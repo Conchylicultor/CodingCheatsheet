@@ -55,6 +55,7 @@ for (String s : myList) {
 continue;
 break;
 === python
+# For loops have an else clause
 for x in my_list:
     if x == target:
         break
@@ -94,12 +95,17 @@ switch (month)  // Also works with String
 === cpp
 bool b = true;
 std::string s = "Hello";
+
+std::optional<std::string> var; // Can be a string or a not value (like None in python) C++17
+var.value_or("default"); // .has_value() ; .value()
 === java
 boolean b = true;
 String s = "Hello"
 === python
 b = True
 s = 'Hello'
+
+z = complex(1, 4)  # = 1 + 4j
 
 # Types: bool, str, int, float, list, tuple, dict, set,...
 ===============================================
@@ -121,10 +127,130 @@ Mode = enum.Flag('Mode', 'r, w')  # Since 3.6, Flags compatible with &, |, ^, ~
 === cpp
 decltype(a->x) y;   // type of y is double (declared type)
 decltype((a->x)) z = y; // type of z is const double& (lvalue expression)
+
+// When return type depends on template parameters
+template<typename T, typename U>
+auto add(T t, U u) -> decltype(t + u)
+{
+}
+
+// Type checking (statically at compile time)
+std::is_same<T1, T2>::value // Or is_same_v<T> since C++14
+std::remove_reference<int>::type // Or remove_reference_t<T>
 === java
 === python
 type(o) is str
 isinstance(o, str)
+===============================================
+====== Casting
+=== cpp
+// Cast
+static_cast<>(x) // Standard conversion (ex: double to float)
+reinterpret_cast<>(x) // Bits don’t change (ex: char* to int*)
+const_cast<>(c)
+dynamic_cast<>(); // For inheritance
+
+// To overload cast
+explicit operator bool () const; // explicit prevent bool a = obj
+operator int* () const; // Note the absence of return value in the signature
+operator MyType () const; // Custom cast
+=== java
+float newVar = (float)oldVar; // C like syntax
+=== python
+str(x)
+int(x) // associated __int__(self) to overload
+float(x)
+bin(6) # Return string '0b110', x=int('0b110', base=2)
+list(x)
+===============================================
+====== Binary/ranges
+=== cpp
+// The standard don't fix precise size but usually:
+// Type       | Bits | Bytes  |    Max val
+// char          8       1        127 / 255
+// short (int)  16       2         32,000
+// int/long     32       4   2,000,000,000 (billion)
+// long long    64       8          10^19
+// float        32       4         10^+/-38
+// double       64       8        10^+/-300
+
+// Fixed-size available:
+uint8_t // u for unsigned
+int64_t // 8, 16, 32 and 64 available
+
+=== java
+=== python
+# No precision limit for int (a = 10**100+1 valid)
+
+# For better precision on decimals
+decimal.getcontext().prec = decimal.MAX_PREC
+decimal.Decimals('3.142342423452')
+
+# Fraction module to keep quotient/denominator
+
+# complex(img, real) type
+===============================================
+====== Operators/Overload
+=== cpp
+// Associativity: Usually left to right: (((a+b)+c)+d) or ((a<<b)<<c)
+
+// Binary ops:
+// AND: &
+// OR: |
+// NOT: ~
+// XOR: ^
+// Shift right: >>  // Warning: strong bit is copied (negative stay negative)
+// Shift left: <<  // Fill with 0s
+
+// Overloading the operators
+A operator+(const A& other); // Can be non member
+
+// Others
+int operator int()
+void operator new
+void operator new []
+A* operator ->(); // Must return ptr, obj or ref
+void operator++(0);
+void operator[](int index); // Only one arg (contrary to Python), can be anything (ex: sting key)
+void operator()(Args...);
+bool operator >=(const T& other) const; // WARNING: Don't forget const when necessary (comparison operators)
+
+A operator= (A&& ); // Move assignment operator
+=== java
+// No operator overloading in java
+=== python
+# As C++, most ops are left-associative
+# ((a * b) // c) or ((a**b)**c)
+
+**  # __pow__
+/  # __truediv__ (diff between 2.6 and py 3)
+//  # __floordiv__
+@ # __matmul__ (since 3.5, no built-in implement it)
+divmod(x, y) # return the pair (x // y, x % y)
+
++= # __iadd__  (i stand for in-place)
+
+# right-side ops, ex: __rsub__ allows (4 - my_obj)
+#   - only used if (4).__sub__(my_obj) don't exist
+#   - and 4 and my_obj are from different types (what if children ?)
+
+__neg__  # or __pos__ : Unary ops (ex: a = -x)
+__invert__ # for ~ x ; __abs__ or __round__
+
+def __add__(self, other):
+
+def __lt__(self, other):  // lesser than (<) __le__ for <=
+
+def __call__(self, *args, **kwargs):
+
+def __str__(self):
+
+def __getitem__(self, item):  # For x['a',...,3:5]
+    # item can be a tuple of the passed arguments, ex: ('a', Ellipsis, slice(3,5,None))
+    # Can check if args contains Ellipsis object (same as ...)
+    # x:y are converted into `slice` objects (slice(start=, end=, step=))
+
+# TODO: What does __index__() does ? return self for integer ?
 ===============================================
 ====== Functions/lambda
 === cpp
@@ -141,7 +267,7 @@ f = functools.partial(fct, 42, arg2=43)
 10'000.0 // double // ' since C++14
 0.f // Float
 0xFF00
-0b1111'0000 // 0b since C++14
+0b1101'0100 // 0b since C++14
 
 size_t length = 1'000'000 * nb_row;  // Warning: the computation is done as int. Risk of overflow !
 === java
