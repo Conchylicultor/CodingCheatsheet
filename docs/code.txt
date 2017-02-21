@@ -1,5 +1,6 @@
 ================================================================================
 ========= Base code
+===============================================
 ====== Hello world
 === cpp
 #import <iostream>
@@ -88,6 +89,7 @@ switch (month)  // Also works with String
 === python
 ================================================================================
 ========= Primitives, operators
+===============================================
 ====== Primitives
 === cpp
 bool b = true;
@@ -144,6 +146,104 @@ size_t length = 1'000'000 * nb_row;  // Warning: the computation is done as int.
 === java
 === python
 1_000.0  # _ since python 3.6
+================================================================================
+========= Collections
+===============================================
+====== Iterators
+=== cpp
+// Concepts:
+// ForwardIterator (just +) and BidirectionalIterator (iter - 5 valid)
+// RandomAccessIterator (cst access to any elems)
+
+
+while(v.begin() != v.end()){} // Warning: != and not <
+v.rbegin() // Reverse iterator (should be compared with .rend())
+=== java
+// implement Iterable, override:
+// .iterator()
+// boolean .hasNext()
+// Item .next()
+// .remove()
+=== python
+i = iter([1, 2, 3, 4])
+x = next(i)  # Or i.__next__() for 3.x, i.next() for 2.6 : Return elem (not yield)
+i.__length_hint__()  # ==3 : Nb of elem left, optional
+
+# To create own iterator:
+# Either overload __iter__(self) as a generator (yield)
+# Either __iter__ return an object (potentially self) which overload __next__
+
+# Iters have 2nd arg for sentinel value (exit if encounter), first arg should be callable function
+for c in iter(my_fct, ''):  # Exit when my_fct return ''
+    var.append(c)
+
+# Generators
+def f():
+   for i in range(10):
+      yield i
+gen = f()  # Return instantaneously
+next(gen)  # Execute the function up to the next yield
+# Raise StopIteration when finished
+===============================================
+====== Vector
+=== cpp
+std::vector<T> v;
+std::array<T, N> v; // Since C++11, in practice more trouble (ex:array of array), only use when perfs critical
+
+=== java
+=== python
+my_list = []
+===============================================
+====== List/queues
+=== cpp
+std::list<T> l; // Double linked list (O(1) time remove any elem)
+std::deque<T> l; // O(1) time for random access
+std::forward_list<T> l; // C++11
+=== java
+Stack<Item> s;
+= s.pop()
+s.push(Item);
+
+Queue<Item> q;
+q.enqueue(Item);
+= q.dequeue();
+
+=== python
+===============================================
+====== HashTable
+=== cpp
+=== java
+=== python
+# ---- Sets: Warning: ----
+#   set       VS       dictionary
+{1, 2, 3}     VS  {1:’2’, 2:’2’, 4:’4’}
+set()         VS  {}
+a = set()
+a |= {1, 2, 3}  # += Don’t exist, neither .extend()
+a.add(2)  # Single elem only
+a.remove(2)
+a.pop() # Choose random elem
+# Other ops &= (intersection), ^= (exclude comuns), -=
+# set can be compared (<: incude, <=, .isdisjoint(other))
+
+===============================================
+====== Other
+=== cpp
+=== java
+=== python
+# Tuple:
+(a,e,t)
+(singleton,)  # Warning: ending comma ,
+
+# namedtuple
+Color = collections.namedtuple('Color', ['r', 'g', 'b'])
+c = Color(255, 0, 124)
+===============================================
+====== Common collections methods
+=== cpp
+=== java
+=== python
+================================================================================
 ========= Other
 ===============================================
 ====== Example
