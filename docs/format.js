@@ -52,6 +52,9 @@ var entityMap = {
 };
 
 function escapeHtml (string) {
+    if(string == null || string.length == 0) {
+        return "";
+    }
     return String(string).replace(/[&<>"'`=\/]/g, function (s) {
         return entityMap[s];
     });
@@ -137,18 +140,18 @@ $(document).ready(function(){
         var currentMain = mainSections[i];
 
         content.push("<h2>" + currentMain.title + "</h2>");
-        content.push("<table>");
-        content.push("<tr><td>C++</td> <td>Java</td> <td>Python</td></tr>");  // TODO: Loop over the columnTitles
+        content.push("<table class=\"table_language\">");
+        content.push("<tr class=\"mainsection_language\"><td><h3>C++</h3></td> <td><h3>Java</h3></td> <td><h3>Python</h3></td></tr>");  // TODO: Loop over the columnTitles
 
         for(var j = 0; j < currentMain.subsections.length; j++)
         {
             currentSub = currentMain.subsections[j];
-            content.push("<tr><td colspan=\"3\">" + currentSub.title + "</td></tr>");
+            content.push("<tr><td colspan=\"3\"class=\"subsection_language\" ><h4>" + currentSub.title + "</h4></td></tr>");
             content.push("<tr>");
 
             for(var k = 0; k < columnOrder.length; k++)
             {
-                content.push("<td><pre><code class=\"" + columnOrder[k] + "\">");
+                content.push("<td class=\"cell_language\"><pre><code class=\"" + columnOrder[k] + "\">");
                 content.push(escapeHtml(currentSub.columns[columnOrder[k]]));  // TODO: Escape characteres
                 content.push("</code></pre></td>");
             }

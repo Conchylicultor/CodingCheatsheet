@@ -1,0 +1,59 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+
+h1 {
+    text-align: center;
+}
+
+#coding_table {
+    width: 70%;
+    margin: auto;
+}
+
+table.table_language {
+    width: 90%;
+    align: "center";
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+tr.mainsection_language > td {
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    margin: 1em;
+}
+
+tr.subsection_language {
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    margin: 1em;
+}
+
+h3 {
+    margin-left: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+h4 {
+    margin-left: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+td.cell_language {
+    border: 1px solid #ccc;
+    width: 33%;
+    vertical-align: top;
+    background-color: #f8f8f8; /* HACK: As if pre was taking 100% of the height*/
+}
+
+pre {
+    margin: 0;
+}
+
+code {
+    white-space: pre-wrap;
+}

@@ -104,7 +104,7 @@ public enum Day {MONDAY, TUESDAY} // No ;
 === python
 class Day(enum.Enum):  # Since 3.4
     MON = enum.auto()
-    TUE = enum.auto()  # auto() since 3.6, before explicit was better than implicit...
+    TUE = enum.auto()  # auto() since 3.6, before, explicit was better than implicit...
 
 Day = enum.Enum('Day', 'MON, TUE, WED')  # as collections.namedtuple
 
