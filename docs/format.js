@@ -130,23 +130,36 @@ $(document).ready(function(){
         "python":"Python"
     };
     var content = [];
+    var summary_content = [];
 
     // TODO: Add a table of content (would be great to have that as a lateral menu)
 
     // TODO: Add option to dynamically select the columns
 
+    const anchorPrefix = "sect_";
+
+    summary_content.push("<ul>");
+
     for(var i = 0; i < mainSections.length; i++)
     {
         var currentMain = mainSections[i];
+        var anchor = anchorPrefix + i.toString();
 
-        content.push("<h2>" + currentMain.title + "</h2>");
+        summary_content.push("<li><a href=\"#" + anchor + "\">" + currentMain.title + "</a></li>");
+        summary_content.push("<ul>");
+
+        content.push("<h2 id=\"" + anchor + "\">" + currentMain.title + "</h2>");
         content.push("<table class=\"table_language\">");
         content.push("<tr class=\"mainsection_language\"><td><h3>C++</h3></td> <td><h3>Java</h3></td> <td><h3>Python</h3></td></tr>");  // TODO: Loop over the columnTitles
 
         for(var j = 0; j < currentMain.subsections.length; j++)
         {
             currentSub = currentMain.subsections[j];
-            content.push("<tr><td colspan=\"3\"class=\"subsection_language\" ><h4>" + currentSub.title + "</h4></td></tr>");
+            anchor = anchorPrefix + i.toString() + "_" + j.toString();
+
+            summary_content.push("<li><a href=\"#" + anchor + "\">" + currentSub.title + "</a></li>");
+
+            content.push("<tr><td colspan=\"3\"class=\"subsection_language\" ><h4  id=\"" + anchor + "\">" + currentSub.title + "</h4></td></tr>");
             content.push("<tr>");
 
             for(var k = 0; k < columnOrder.length; k++)
@@ -157,9 +170,14 @@ $(document).ready(function(){
             }
             content.push("</tr>");
         }
+        summary_content.push("</ul>");
+
         content.push("</table>");
     }
 
+    summary_content.push("</ul>");
+
+    $("#table_of_content").append(summary_content.join('\n'))
     $("#coding_table").append(content.join('\n'))
     $('pre code').each(function(i, block) {  // Update the code highlighting
         hljs.highlightBlock(block);
