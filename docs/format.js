@@ -95,7 +95,9 @@ $(document).ready(function(){
     var lines = textToParse.split('\n');
     for(var i = 0; i < lines.length; i++) {
         var line = lines[i]
-        if(line.startsWith('========= ')) {  // Main section
+        if(line.startsWith('=============')) {  // Skip section
+        }
+        else if(line.startsWith('========= ')) {  // Main section
             flushText();
             line = line.replace(/^[\s=#]+/, "");
             mainSections.push(new MainSection(line));  // Creation of new section
