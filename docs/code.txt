@@ -105,9 +105,10 @@ s = 'Hello'
 ===============================================
 ====== Enum
 === cpp
-enum e {a, b, c=3}; // enum class in C++11
+enum e {a, b, c=a+3}; // start at 0, then +1
+enum class e {a, b, c}; // strongly typed in C++11
 === java
-public enum Day {MONDAY, TUESDAY} // No ;
+public enum Day {MONDAY, TUESDAY} // No custom values;
 === python
 class Day(enum.Enum):  # Since 3.4
     MON = enum.auto()
@@ -152,7 +153,8 @@ size_t length = 1'000'000 * nb_row;  // Warning: the computation is done as int.
 ====== Iterators
 === cpp
 // Concepts:
-// ForwardIterator (just +) and BidirectionalIterator (iter - 5 valid)
+// ForwardIterator (just +)
+// BidirectionalIterator (iter - 5 valid)
 // RandomAccessIterator (cst access to any elems)
 
 
