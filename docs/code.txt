@@ -139,7 +139,7 @@ std::remove_reference<int>::type // Or remove_reference_t<T>
 === java
 === python
 type(o) is str
-isinstance(o, str)
+isinstance(o, basestring)  # Also take into account child classes
 ===============================================
 ====== Casting
 === cpp
@@ -589,6 +589,8 @@ friend class Other;
 self.__var = 1  # Name outside the class becomes obj._A__var
 
 MyClass.__dict__.keys() == ['_MyClass__var', ...]  # Access all members/attributes of a class
+vars(obj)  # Should be prefered. Return ref on __dict__ . Warning: instances have an updateable __dict__ attribute but not classes
+
 hasattr(cls, name)
 getattr(cls, name)
 
