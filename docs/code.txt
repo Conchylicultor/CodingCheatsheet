@@ -546,8 +546,8 @@ def email(self, new_val):
 ====== Abstract methods
 === cpp
 virtual void b() {} // Implemented here
-void a () = 0; // virtual pure (abstract class)
-void a () final; // Explicitly forbidden override
+void a() = 0; // virtual pure (abstract class)
+void a() final; // Explicitly forbidden override
 void b() override; // Explicitly require parent virtual
 
 // WARNING: Declare constructor VIRTUAL
