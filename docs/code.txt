@@ -231,9 +231,8 @@ divmod(x, y) # return the pair (x // y, x % y)
 def __iadd__(self, other): # +=  (i stand for in-place)
     return self  # Don't forget
 
-# right-side ops, ex: __rsub__ allows (4 - my_obj)
-#   - only used if (4).__sub__(my_obj) don't exist
-#   - and 4 and my_obj are from different types (what if children ?)
+def __rsub__(self, other): # right-side ops, allows (4 - my_obj)
+# Only used if (4).__sub__(my_obj) don't exist and 4 and my_obj are from different types (what if children ?)
 
 def __neg__(self):  # or __pos__ : Unary ops (ex: a = -x)
 def __invert__(self): # for ~ x ; __abs__ or __round__
