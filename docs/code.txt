@@ -39,9 +39,8 @@ if __name__ == '__main__':
 ===============================================
 ====== Loops
 === cpp
-for (const std::string& s : myList)
-{
-}
+for(size_t i = 0 ; i < myList.size() ; ++i);  // Warning: size_t unsigned so overflow when reverse iterate (; i >= 0 ; --i)
+for(const std::string& s : myList);
 for(auto x : v); // Work with copy
 for(auto& x : v);
 for(auto const& : v); // Work with const reference
