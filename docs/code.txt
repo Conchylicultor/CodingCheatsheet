@@ -549,7 +549,7 @@ void a() = 0; // virtual pure (abstract class)
 void a() final; // Explicitly forbidden override
 void b() override; // Explicitly require parent virtual
 
-// WARNING: Declare constructor VIRTUAL
+// WARNING: Declare destructor VIRTUAL
 === java
 public interface Foo {
     public void doSomething();
