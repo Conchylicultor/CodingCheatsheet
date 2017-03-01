@@ -179,7 +179,7 @@ $(document).ready(function(){
 
     summary_content.push("</ul>");
 
-    $("#table_of_content").append(summary_content.join('\n'))
+    $("nav").append(summary_content.join('\n'))
     $("#coding_table").append(content.join('\n'))
     $('pre code').each(function(i, block) {  // Update the code highlighting
         hljs.highlightBlock(block);

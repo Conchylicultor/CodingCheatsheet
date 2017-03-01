@@ -7,16 +7,16 @@ h1 {
     text-align: center;
 }
 
-#table_of_content {
+nav {
     float: left;
     width: 16%;
     height: 90%;
-    overflow: scroll;
+    overflow: auto;
     font-size: 0.85em;
     position: fixed;
 }
 
-#table_of_content ul {
+nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -24,7 +24,7 @@ h1 {
     background-color: #f1f1f1;
 }
 
-#table_of_content li a { /* First level menu */
+nav li a { /* First level menu */
     display: block;
     padding: 8px 16px;
     text-decoration: none;
@@ -33,22 +33,22 @@ h1 {
     color: white;
 }
 
-#table_of_content li a:hover {
+nav li a:hover {
     background-color: #7c7c7c;
     color: white;
 }
 
-#table_of_content ul ul li a { /* Second level menu */
+nav ul ul li a { /* Second level menu */
     background-color: #f1f1f1;
     color: #000;
 }
 
-#table_of_content ul ul li a:hover {
+nav ul ul li a:hover {
     background-color: #555;
     color: white;
 }
 
-#coding_table {
+main {
     width: 60%;
     margin: auto;
 }
