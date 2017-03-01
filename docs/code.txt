@@ -122,7 +122,7 @@ decltype(fct)    // type: void(int)
 // Evolution of C/C++
 int* a = NULL;  // Legacy
 int* a = 0;
-int* a = nullptr;  // Best (compilation error if try to do arithmetic with integers)
+int* a = nullptr;  // Best (compilation error if try to compare with integer)
 
 
 const char* a; // ptr on const char
