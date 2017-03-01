@@ -103,7 +103,7 @@ std::unique_ptr<A[]> array = std::make_unique<A[]>(5);
 
 // Smart pointer:
 std::unique_ptr<T> p;  // Transfer ownership with std::move
-std::shared_ptr<T> p = std::make_shared{Args&&...};  // Can still have memory leak if circular
+std::shared_ptr<T> p = std::make_shared(Args&&...);  // Can still have memory leak if circular
 T* x = p.get() // Get raw ptr
 std::weak_ptr // used for caching (keep reference but without counting: ref can eventually be destroyed). Converted to shared_ptr with if(auto x=p.lock())
 
