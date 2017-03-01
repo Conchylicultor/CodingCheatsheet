@@ -87,6 +87,56 @@ switch (month)  // Also works with String
         // ...
 }
 === python
+===============================================
+====== Exceptions
+=== cpp
+try
+{
+    throw Exception();  // In C++, exceptions can be any objects (int,...)
+    // common to inherit from std::exception and override const char* what()
+}
+catch (Exception& e)  // Can only catch one exception
+{
+    cout << e.what() << endl;
+}
+catch (...)
+{
+    // Default exception
+} // No finally in c++
+=== java
+try {
+    // If return here, the value is stored, then finally is called, then the stored value is returned
+} catch(ArrayIndexOutOfBoundsException e) {
+    // ...
+} catch(IOException|SQLException e) { // Catch 2 exceptions
+    e.printStackTrace();
+} catch(Exception e) {
+    // ...
+} finally {
+    // ...
+}
+
+// If not surrounded by try {} catch {}, the function must explicitly declare: throw
+
+void f() throw E // E inherit of Exception extends Throwable
+{
+}
+
+// Throwable is the interface (Should not be catch (except eventually in main() ))
+// Exception is the class
+=== python
+try:
+    raise AttributeError
+except IOError as e:  # (KeyboardInterrupt, EOFError) as e:  # For multiple exceptions at once
+    pass
+except: # OR: except Exception as e:
+    pass
+else: # If no exceptions
+    pass
+finally: # In any case (even if return statement)
+    pass
+
+# Good practice to hide/wrap exception handling inside context manager
 ================================================================================
 ========= Primitives, operators
 ===============================================
@@ -647,55 +697,6 @@ __slots__ = ['x', 'y']  # Optimize the class (reduce the memory allocation for e
 ================================================================================
 ========= Other
 ===============================================
-====== Exceptions
-=== cpp
-try
-{
-    throw Exception();  // In C++, exceptions can be any objects (int,...)
-    // common to inherit from std::exception and override const char* what()
-}
-catch (Exception& e)  // Can only catch one exception
-{
-    cout << e.what() << endl;
-}
-catch (...)
-{
-    // Default exception
-} // No finally in c++
-=== java
-try{
-    // If return here, the value is stored, then finally is called, then the stored value is returned
-} catch(ArrayIndexOutOfBoundsException e) {
-    // ...
-} catch(IOException|SQLException e) { // Catch 2 exceptions
-    e.printStackTrace();
-}catch(Exception e){
-    // ...
-} finally {
-    // ...
-}
-
-// If not surrounded by try {} catch {}, the function must explicitly declare: throw
-
-void f() throw E // E inherit of Exception extends Throwable
-{
-}
-
-// Throwable is the interface (Should not be catch (except eventually in main() ))
-// Exception is the class
-=== python
-try:
-    raise AttributeError
-except IOError as e:  # (KeyboardInterrupt, EOFError) as e:  # For multiple exceptions at once
-    pass
-except: # OR: except Exception as e:
-    pass
-else: # If no exceptions
-    pass
-finally: # In any case (even if return statement)
-    pass
-
-===============================================
 ====== Thread and concurency
 === cpp
 // Low level: launch a callable (fct, fct Obj, lambda)
@@ -754,6 +755,34 @@ x = random.randint(0,10)  # [0,10] (WARNING: confusion with np.randint() where m
 math.isclose(a, b)  # float equality (since 3.4)
 
 round(x, 2) # Round to 2 decimal points
+===============================================
+====== Language specificities
+=== cpp
+// Copy elision: Optimize copy/move constructor
+T x = T(T(T())); // only one call to default constructor of T, to initialize x
+
+// Named return Value Optimisation:
+T f()
+{
+    T t;
+    return t;  // most likely elided entirely
+    return std::move(t);  // uses T::T(T &&) if defined; error if deleted or inaccessible
+    return static_cast<T&>(t)  // uses T::T(T const &)
+}
+=== java
+=== python
+# Context managers
+with MyContext() as c:  # Call MyContext.__enter__ and .__exit__
+   pass
+
+@contextlib.contextmanager # Wrap __enter__, __exit__
+def my_context():
+    try:
+        yield  # must yield one exactly (the yield value is caught by `as`)
+        # Close code is after (generally catching exceptions)
+    finally:  # Called even if called return within the context manager
+        pass
+
 ================================================================================
 ========= Other
 ===============================================
