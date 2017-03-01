@@ -133,6 +133,9 @@ A a = new A();  // All objects are references
 
 null
 === python
+# Comparison `==` (equality) vs `is`(reference)
+# Immutable exists only once (except tuple)
+'hello' is 'hello'  # True
 ===============================================
 ====== Exceptions
 === cpp
