@@ -88,6 +88,52 @@ switch (month)  // Also works with String
 }
 === python
 ===============================================
+====== Pointers/Reference
+=== cpp
+int **f = new int*[12];
+int **f = (int**)malloc(sizeof(int*)*12)
+for  (int i = 0 ; i < 12; ++i)
+{
+  f[i] = new int[5];
+}
+// New way (if vector not possible). Warning: C++14 for make_unique
+std::unique_ptr<A[]> array = std::make_unique<A[]>(5);
+
+// calloc = malloc + initialization at 0
+
+// Smart pointer:
+std::unique_ptr<T> p;  // Transfer ownership with std::move
+std::shared_ptr<T> p = std::make_shared{Args&&...};  // Can still have memory leak if circular
+T* x = p.get() // Get raw ptr
+std::weak_ptr // used for caching (keep reference but without counting: ref can eventually be destroyed). Converted to shared_ptr with if(auto x=p.lock())
+
+// To create a graph data structure, have a container class which contains a vector of unique_ptr to every nodes and which centralize creation/deletion of new nodes. The nodes manipulate themselves using regular ptr. Design 'correct by construction'.
+
+// Warning when passing an cst array as parameters
+void fct(int v[], )
+
+// the aliasing constructor (ownership and data different)
+shared_ptr<Data> n = {node, &node->data} // node being another shared_ptr
+
+// Ptr on function vs value fct
+decltype((fct)) // type: void(*)(int) // Note the double (())
+decltype(fct)    // type: void(int)
+
+// Evolution of C/C++
+int* a = NULL;  // Legacy
+int* a = 0;
+int* a = nullptr;  // Best (compilation error if try to do arithmetic with integers)
+
+
+const char* a; // ptr on const char
+// VS
+char const* b; // const ptr
+=== java
+A a = new A();  // All objects are references
+
+null
+=== python
+===============================================
 ====== Exceptions
 === cpp
 try
@@ -140,7 +186,54 @@ finally: # In any case (even if return statement)
 ===============================================
 ====== Templates/generics
 === cpp
+template <typename A, int N, class C = DefaultClass>
+void f(A a);
+
+// Class vs typename:
+// class works for recursive template
+template < <typename> class A> void f(A a);
+
+// Implementation C++
+template <class T>
+Test<T>::fct(){} // WARNING: Don’t forget the <>
+
+// Warning: when referencing a non static member type
+using Type = typename T::m_x; // DON'T forget typename
+
+// Variadic Templates:
+template<typename... Args>
+void fct(Args... args)
+{
+    h(args...);  // forwards parameters
+}
+
+// std::move allows to forward a rvalue
+// Perfect forwarding (avoid reference collapsing)
+std::forward<T>(Args)... // Do not forget <T>
+
+// WARNING: && as type deduction with template
+template <class T>
+void func(T&& t) {
+   t++;
+}
+// rvalue: t: T  ( f(4.f), f( f2() )  t -> float
+// lvalue: t: T& ( f(x) )             t -> float&
+
+Reference collapsing rule:
+// If & present, will always give & ex: & && -> &
+// Otherwise: && && -> &&
+// ex: T&& (with T=int&) == int& && == int&
+
+// Expression-template (Hard to implement): trick to optimize linear algebra calculus (Boost uBLAS, Eigen):
+Vec result = a+b+c; // Expression-template avoid copies and temporary objects: expression of type VecSum<VecSum<Vec, Vec>, Vec>
+// It uses the Curiously recurring template pattern
+class A : public B<A>
+{};
 === java
+public static <T> void f(T[] t)
+{
+    System.out.println(t.length);
+}
 === python
 ================================================================================
 ========= Primitives, operators
@@ -522,7 +615,7 @@ namespace std
     {
         std::size_t operator()(K const& k) const
         {
-           // Don't forget {} when declaring the hash (hash{}(x))
+            // Don't forget {} when declaring the hash (hash{}(x))
             std::size_t const h1 ( std::hash<std::string>{}(k.x1) );
             std::size_t const h2 ( std::hash<int>{}(k.x2) );
             return h1 ^ (h2 << 1); // or use boost::hash_combine
@@ -576,7 +669,7 @@ collections.defaultdict(factory)  # Use factory() to initialize elem if not exit
 {1, 2, 3}     VS  {1:'2', 2:'2', 4:'4'}
 set()         VS  {}
 a = set()
-a |= {1, 2, 3}  # += Don't exist, neither .extend()
+a |= {1, 2, 3}  # += don't exist, neither .extend()
 a.add(2)  # Single elem only
 a.remove(2)
 a.pop() # Choose random elem
@@ -738,12 +831,19 @@ def __repr__(self):  # Called when print([obj]), repr(obj)
 === java
 === python
 @property  # Act as public attribute (e = my_obj.email)
-def email(self):
+def email(self):  # Read only
     return self.__email
 
 @email.setter  # Note the variable name
 def email(self, new_val):
     self.__email = new_val
+
+# On constructor if initialized and has a setter
+# self.email = 'test@gmail.com'  # Will call email.__set__()
+
+@email.deleter  # Optional
+def email(self):
+    del self.__email
 ===============================================
 ====== Abstract methods
 === cpp
@@ -864,6 +964,19 @@ round(x, 2) # Round to 2 decimal points
 ===============================================
 ====== Language specificities
 === cpp
+vtables: reference to parents method (which have been overloaded)
+
+
+// lvalues and rvalues:
+// a is an rvalue, rvalues are temporary objects, so a should not exist after being passed to the function
+void f(T&& a)
+{}
+f(T{}); // Will work
+T b{};
+f(b); // Compilation error: Try to pass a lvalue.
+f(std::move(b));  // Forward b as rvalue (b should not be used after that)
+
+
 // Copy elision: Optimize copy/move constructor
 T x = T(T(T())); // only one call to default constructor of T, to initialize x
 
