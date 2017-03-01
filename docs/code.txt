@@ -189,6 +189,25 @@ decimal.Decimals('3.142342423452')
 
 # complex(img, real) type
 ===============================================
+====== ##Formatting/alternate representation
+=== cpp
+10u // Unsigned
+10uLL // Unsigned long long
+10'000.0 // double // ' since C++14
+0.f // Float
+0xFF00
+0b1101'0100 // 0b since C++14
+
+// TODO:
+// Literal operators: Allows conversions (WARNING: NOT MEMBERS, must begin by underscore)
+std::string operator "" _w(const char16_t*, size_t);
+// Use:  u”Hello”_w // (u is for utf16)
+
+size_t length = 1'000'000 * nb_row;  // Warning: the computation is done as int. Risk of overflow !
+=== java
+=== python
+1_000.0  # _ since python 3.6
+===============================================
 ====== Operators/Overload
 === cpp
 // Associativity: Usually left to right: (((a+b)+c)+d) or ((a<<b)<<c)
@@ -292,25 +311,6 @@ b = lambda x : 3  # Same but PEP8 discourage the use of lambda (stack trace more
 
 # Equivalent of std::bind
 new_fct = functools.partial(fct, arg1, arg2, pos=arg3)
-===============================================
-====== ##Formatting/alternate representation
-=== cpp
-10u // Unsigned
-10uLL // Unsigned long long
-10'000.0 // double // ' since C++14
-0.f // Float
-0xFF00
-0b1101'0100 // 0b since C++14
-
-// TODO:
-// Literal operators: Allows conversions (WARNING: NOT MEMBERS, must begin by underscore)
-std::string operator "" _w(const char16_t*, size_t);
-// Use:  u”Hello”_w // (u is for utf16)
-
-size_t length = 1'000'000 * nb_row;  // Warning: the computation is done as int. Risk of overflow !
-=== java
-=== python
-1_000.0  # _ since python 3.6
 ================================================================================
 ========= Collections
 ===============================================
