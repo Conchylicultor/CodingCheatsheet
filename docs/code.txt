@@ -591,8 +591,10 @@ friend class Other;
 self.__var = 1  # Name outside the class becomes obj._A__var
 
 MyClass.__dict__.keys() == ['_MyClass__var', ...]  # Access all members/attributes of a class
-hasattr(cls, name)
-getattr(cls, name)
+hasattr(obj, name)
+getattr(obj, name[, default])
+setattr(obj, name, value)  # obj.name = value (create or update)
+delattr(obj, name)  # del obj.name
 
 __slots__ = ['x', 'y']  # Optimize the class (reduce the memory allocation for each instance)
 ================================================================================
