@@ -137,6 +137,11 @@ finally: # In any case (even if return statement)
     pass
 
 # Good practice to hide/wrap exception handling inside context manager
+===============================================
+====== Templates/generics
+=== cpp
+=== java
+=== python
 ================================================================================
 ========= Primitives, operators
 ===============================================
@@ -431,14 +436,29 @@ std::array<T, N> v; // Since C++11, in practice more trouble (ex:array of array)
 
 std::bitset<sizeof(int)*8> bits; // Array of bits
 === java
+ArrayList<int> list;
+Obj v.get(index)
+.set(index, Obj)
+
+.add(index, Obj)
+.add(Obj)  // end of list
+.addAll(index, Collection)
+
+Obj .remove(int index)
+boolean .remove(iObj obj)
 === python
 my_list = []
+
+list = [0] * desired_length
+
+.extend(collection)
 ===============================================
 ====== List/queues
 === cpp
-std::list<T> l; // Double linked list (O(1) time remove any elem)
+std::list<T> l = {1, 2, 3}; // Double linked list (O(1) time remove any elem)
 std::deque<T> l; // O(1) time for random access
 std::forward_list<T> l; // C++11
+
 === java
 Stack<Item> s;
 = s.pop()
@@ -448,12 +468,67 @@ Queue<Item> q;
 q.enqueue(Item);
 = q.dequeue();
 
+LinkedList
+.add
+.addAll
+.addFirst(Obj)
+.addLast(Obj)
+.get(index)
+.getFirst()
+.getLast()
+// As Stack
+.push(Obj)
+.pop()
+//
+Obj .removeFirst()
 === python
+q = collections.deque([1, 2, 3])
+x = q.popleft()  # or appendleft
 ===============================================
 ====== HashTable
 === cpp
+/ Keep order (o(logn)) retrieval
+std::map<string, int> map;
+
+// Hash table: o(1) lookup
+std::unordered_map<string, int> umap;
+
+
+// Check elem presence
+.count(key); // return 0 or 1 for map
+.find(key); // return iterator if found, map::end otherwise
+
+// Set, map, unordered_map, …
+.insert(std::pair<K,V>(k, v));
+.emplace(std::make_pair(k, v)); // converting move constructor
+.emplace(k, v); // uses pair's template constructor
+// Warning: Value initialized if not exist (int:0, bool:false)
+[“key”] = val; // Will create the key if not exist
+.at(key); // out_of_range exception if not exist
+.erase(k)// Either key, iter or (begin(), end())
+
+// Iterate over unorered_map
+for (pair<K,V>& next : mapObj) ...;
+
 for (auto&& [ k, v ] : get_map())  // C++17 allows structured bindings
     std::cout << "k=" << k << " v=" << v << '\n';
+
+// To use a custom class Key, you need:
+//  * a class which overload operator == (to handle collisions)
+//  * a custom hash (overload std):
+namespace std
+{
+    template<> struct hash<K>
+    {
+        std::size_t operator()(K const& k) const
+        {
+           // Don't forget {} when declaring the hash (hash{}(x))
+            std::size_t const h1 ( std::hash<std::string>{}(k.x1) );
+            std::size_t const h2 ( std::hash<int>{}(k.x2) );
+            return h1 ^ (h2 << 1); // or use boost::hash_combine
+        }
+    };
+}
 === java
 HashMap<K,V>
 .put(key, value);
@@ -472,6 +547,30 @@ public int hashCode() {
     }
 }
 === python
+.items()
+.keys()
+
+# Return the values
+get(key[, default])  # Don't modify the dict
+setdefault(key[, default])  # Set if not present
+
+pop(key[, default])
+popitem() // Remove arbitrary item (atomic: thread-safe)
+del my_dict[‘key’]
+
+# Merge 2 dicts
+.update(other)
+
+d = collections.defaultdict(list)  # Initialize the new keys with list()
+d['new_key'].append(x)
+
+c = collections.Counter(['a', 'a', 'b'])
+c['d'] # = 0
+c.most_common(1)  # = [('a', 2)]
+
+collections.OrderedDict([items])  # Keep order
+collections.defaultdict(factory)  # Use factory() to initialize elem if not exits
+
 # ---- Sets: Warning: ----
 #   set       VS       dictionary
 {1, 2, 3}     VS  {1:’2’, 2:’2’, 4:’4’}
@@ -484,7 +583,8 @@ a.pop() # Choose random elem
 # Other ops &= (intersection), ^= (exclude comuns), -=
 # set can be compared (<: incude, <=, .isdisjoint(other))
 
-# Custom hash with __hash__(self), by default hash(f(id(obj)))
+def __hash__(self): # Custom hash, by default hash(f(id(obj)))
+    return hash((self.a, self.b))  # tuple are hashable
 ===============================================
 ====== Other
 === cpp
@@ -618,6 +718,12 @@ def meth2():
 ===============================================
 ====== Class to string
 === cpp
+ostream& operator<<(ostream& os, const Obj& obj)
+{
+    // Fct usually declared as friend to allow member access
+    os << "<" << obj.a << '-' << obj.b << '>';
+    return os;
+}
 === java
 String toString() {
     return "fct";
