@@ -25,7 +25,7 @@ import java.lang.Math;
 
 public class HelloWorld
 {
-    public static void main (String[] args)  // WARNING: think PUBLIC, think STATIC
+    public static void main (String[] args)  // WARNING: public and static keywords
     {
         System.out.println("Hello");
     }
@@ -39,9 +39,8 @@ if __name__ == '__main__':
 ===============================================
 ====== Loops
 === cpp
-for (const std::string& s : myList)
-{
-}
+for(size_t i = 0 ; i < myList.size() ; ++i);  // Warning: size_t unsigned so overflow when reverse iterate (; i >= 0 ; --i)
+for(const std::string& s : myList);
 for(auto x : v); // Work with copy
 for(auto& x : v);
 for(auto const& : v); // Work with const reference
@@ -140,7 +139,7 @@ std::remove_reference<int>::type // Or remove_reference_t<T>
 === java
 === python
 type(o) is str
-isinstance(o, str)
+isinstance(o, basestring)  # Also take into account child classes
 ===============================================
 ====== Casting
 === cpp
@@ -231,9 +230,8 @@ divmod(x, y) # return the pair (x // y, x % y)
 def __iadd__(self, other): # +=  (i stand for in-place)
     return self  # Don't forget
 
-# right-side ops, ex: __rsub__ allows (4 - my_obj)
-#   - only used if (4).__sub__(my_obj) don't exist
-#   - and 4 and my_obj are from different types (what if children ?)
+def __rsub__(self, other): # right-side ops, allows (4 - my_obj)
+# Only used if (4).__sub__(my_obj) don't exist and 4 and my_obj are from different types (what if children ?)
 
 def __neg__(self):  # or __pos__ : Unary ops (ex: a = -x)
 def __invert__(self): # for ~ x ; __abs__ or __round__
@@ -547,11 +545,11 @@ def email(self, new_val):
 ====== Abstract methods
 === cpp
 virtual void b() {} // Implemented here
-void a () = 0; // virtual pure (abstract class)
-void a () final; // Explicitly forbidden override
+void a() = 0; // virtual pure (abstract class)
+void a() final; // Explicitly forbidden override
 void b() override; // Explicitly require parent virtual
 
-// WARNING: Declare constructor VIRTUAL
+// WARNING: Declare destructor VIRTUAL
 === java
 public interface Foo {
     public void doSomething();
@@ -591,6 +589,8 @@ friend class Other;
 self.__var = 1  # Name outside the class becomes obj._A__var
 
 MyClass.__dict__.keys() == ['_MyClass__var', ...]  # Access all members/attributes of a class
+vars(obj)  # Should be prefered. Return ref on __dict__ . Warning: instances have an updateable __dict__ attribute but not classes
+
 hasattr(obj, name)
 getattr(obj, name[, default])
 setattr(obj, name, value)  # obj.name = value (create or update)
