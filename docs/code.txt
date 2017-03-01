@@ -651,7 +651,7 @@ get(key[, default])  # Don't modify the dict
 setdefault(key[, default])  # Set if not present
 
 pop(key[, default])
-popitem() // Remove arbitrary item (atomic: thread-safe)
+popitem()  # Remove arbitrary item (atomic: thread-safe)
 del my_dict['key']
 
 # Merge 2 dicts
