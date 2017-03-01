@@ -207,7 +207,7 @@ isinstance(o, basestring)  # Also take into account child classes
 === cpp
 // Cast
 static_cast<>(x) // Standard conversion (ex: double to float)
-reinterpret_cast<>(x) // Bits don’t change (ex: char* to int*)
+reinterpret_cast<>(x) // Bits don't change (ex: char* to int*)
 const_cast<>(c)
 dynamic_cast<>(); // For inheritance
 
@@ -556,7 +556,7 @@ setdefault(key[, default])  # Set if not present
 
 pop(key[, default])
 popitem() // Remove arbitrary item (atomic: thread-safe)
-del my_dict[‘key’]
+del my_dict['key']
 
 # Merge 2 dicts
 .update(other)
@@ -573,10 +573,10 @@ collections.defaultdict(factory)  # Use factory() to initialize elem if not exit
 
 # ---- Sets: Warning: ----
 #   set       VS       dictionary
-{1, 2, 3}     VS  {1:’2’, 2:’2’, 4:’4’}
+{1, 2, 3}     VS  {1:'2', 2:'2', 4:'4'}
 set()         VS  {}
 a = set()
-a |= {1, 2, 3}  # += Don’t exist, neither .extend()
+a |= {1, 2, 3}  # += Don't exist, neither .extend()
 a.add(2)  # Single elem only
 a.remove(2)
 a.pop() # Choose random elem
@@ -633,7 +633,7 @@ public:
     A(A&&);            // Move constructor
     A& operator=(A&& a)// Move assignment operator
     {
-        // (doesn’t allocate new resources)
+        // (doesn't allocate new resources)
         m_a = std::move(a.m_a);
         return *this;
     }
