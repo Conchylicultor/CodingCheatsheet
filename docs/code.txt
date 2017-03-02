@@ -8,7 +8,7 @@
 
 int main(int argc, char** argv)
 {
-    std::cout << "Hello " << 4 << " humans"<< std::endl;
+    std::cout << "Hello " << 4 << " humans" << std::endl;
     printf("Hello %d %s\n", 4, "humans");
     return 0; // EXIT_SUCCESS (defined in cstdlib)
 }
