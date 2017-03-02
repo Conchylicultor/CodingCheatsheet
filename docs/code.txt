@@ -4,35 +4,24 @@
 ====== Hello world
 === cpp
 #import <iostream>
-#import <cstdio>
-#import <vector>
-
-int foo(const std::vector& v)
-{
-    for(size_t i = 0 ; i < v.size() ; ++i)
-    {}
-    return 0;
-}
+#import <cstdio>  // C
 
 int main(int argc, char** argv)
 {
     std::cout << "Hello " << 4 << " humans"<< std::endl;
     printf("Hello %d %s\n", 4, "humans");
-    return 0; // EXIT_SUCCESS (defined in stdlib)
+    return 0; // EXIT_SUCCESS (defined in cstdlib)
 }
 === java
 import java.lang.Math;
 
 public class HelloWorld
 {
-    public static void main (String[] args)  // WARNING: public and static keywords
+    public static void main (String[] args)  // Warning: public and static keywords
     {
-        System.out.println("Hello");
+        System.out.println("Hello " + 4 + " humans");  // Use System.out.format("...%n",...) for a C like printf("...\n",...)
     }
 }
-
-// WARNING: == compare refs, not values (ex: String). No operators overloading
-
 === python
 if __name__ == '__main__':
     print('Hello {} humans'.format(4))
@@ -132,6 +121,8 @@ char const* b; // const ptr
 A a = new A();  // All objects are references
 
 null
+
+// WARNING: == compare refs, not values (ex: String). No operators overloading
 === python
 # Comparison `==` (equality) vs `is`(reference)
 # Immutable exists only once (except tuple)
