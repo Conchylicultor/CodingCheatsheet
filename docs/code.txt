@@ -634,6 +634,18 @@ public int hashCode() {
     }
 }
 === python
+# ---- Sets: Warning: ----
+#   set       VS       dictionary
+{1, 2, 3}     VS  {1:'2', 2:'2', 4:'4'}
+set()         VS  {}
+a = set()
+a |= {1, 2, 3}  # += don't exist, neither .extend()
+a.add(2)  # Single elem only
+a.remove(2)
+a.pop() # Choose random elem
+# Other ops &= (intersection), ^= (exclude comuns), -=
+# set can be compared (<: incude, <=, .isdisjoint(other))
+
 .items()
 .keys()
 
@@ -657,18 +669,6 @@ c.most_common(1)  # = [('a', 2)]
 
 collections.OrderedDict([items])  # Keep order
 collections.defaultdict(factory)  # Use factory() to initialize elem if not exits
-
-# ---- Sets: Warning: ----
-#   set       VS       dictionary
-{1, 2, 3}     VS  {1:'2', 2:'2', 4:'4'}
-set()         VS  {}
-a = set()
-a |= {1, 2, 3}  # += don't exist, neither .extend()
-a.add(2)  # Single elem only
-a.remove(2)
-a.pop() # Choose random elem
-# Other ops &= (intersection), ^= (exclude comuns), -=
-# set can be compared (<: incude, <=, .isdisjoint(other))
 
 def __hash__(self): # Custom hash, by default hash(f(id(obj)))
     return hash((self.a, self.b))  # tuple are hashable
