@@ -4,35 +4,24 @@
 ====== Hello world
 === cpp
 #import <iostream>
-#import <cstdio>
-#import <vector>
-
-int foo(const std::vector& v)
-{
-    for(size_t i = 0 ; i < v.size() ; ++i)
-    {}
-    return 0;
-}
+#import <cstdio>  // C
 
 int main(int argc, char** argv)
 {
-    std::cout << "Hello " << 4 << " humans"<< std::endl;
+    std::cout << "Hello " << 4 << " humans" << std::endl;
     printf("Hello %d %s\n", 4, "humans");
-    return 0; // EXIT_SUCCESS (defined in stdlib)
+    return 0; // EXIT_SUCCESS (defined in cstdlib)
 }
 === java
 import java.lang.Math;
 
 public class HelloWorld
 {
-    public static void main (String[] args)  // WARNING: public and static keywords
+    public static void main (String[] args)  // Warning: public and static keywords
     {
-        System.out.println("Hello");
+        System.out.println("Hello " + 4 + " humans");  // Use System.out.format("...%n",...) for a C like printf("...\n",...)
     }
 }
-
-// WARNING: == compare refs, not values (ex: String). No operators overloading
-
 === python
 if __name__ == '__main__':
     print('Hello {} humans'.format(4))
@@ -103,7 +92,7 @@ std::unique_ptr<A[]> array = std::make_unique<A[]>(5);
 
 // Smart pointer:
 std::unique_ptr<T> p;  // Transfer ownership with std::move
-std::shared_ptr<T> p = std::make_shared{Args&&...};  // Can still have memory leak if circular
+std::shared_ptr<T> p = std::make_shared(Args&&...);  // Can still have memory leak if circular
 T* x = p.get() // Get raw ptr
 std::weak_ptr // used for caching (keep reference but without counting: ref can eventually be destroyed). Converted to shared_ptr with if(auto x=p.lock())
 
@@ -122,7 +111,7 @@ decltype(fct)    // type: void(int)
 // Evolution of C/C++
 int* a = NULL;  // Legacy
 int* a = 0;
-int* a = nullptr;  // Best (compilation error if try to do arithmetic with integers)
+int* a = nullptr;  // Best (compilation error if try to compare with integer)
 
 
 const char* a; // ptr on const char
@@ -132,6 +121,8 @@ char const* b; // const ptr
 A a = new A();  // All objects are references
 
 null
+
+// WARNING: == compare refs, not values (ex: String). No operators overloading
 === python
 # Comparison `==` (equality) vs `is`(reference)
 # Immutable exists only once (except tuple)
@@ -643,6 +634,18 @@ public int hashCode() {
     }
 }
 === python
+# ---- Sets: Warning: ----
+#   set       VS       dictionary
+{1, 2, 3}     VS  {1:'2', 2:'2', 4:'4'}
+set()         VS  {}
+a = set()
+a |= {1, 2, 3}  # += don't exist, neither .extend()
+a.add(2)  # Single elem only
+a.remove(2)
+a.pop() # Choose random elem
+# Other ops &= (intersection), ^= (exclude comuns), -=
+# set can be compared (<: incude, <=, .isdisjoint(other))
+
 .items()
 .keys()
 
@@ -651,7 +654,7 @@ get(key[, default])  # Don't modify the dict
 setdefault(key[, default])  # Set if not present
 
 pop(key[, default])
-popitem() // Remove arbitrary item (atomic: thread-safe)
+popitem()  # Remove arbitrary item (atomic: thread-safe)
 del my_dict['key']
 
 # Merge 2 dicts
@@ -666,18 +669,6 @@ c.most_common(1)  # = [('a', 2)]
 
 collections.OrderedDict([items])  # Keep order
 collections.defaultdict(factory)  # Use factory() to initialize elem if not exits
-
-# ---- Sets: Warning: ----
-#   set       VS       dictionary
-{1, 2, 3}     VS  {1:'2', 2:'2', 4:'4'}
-set()         VS  {}
-a = set()
-a |= {1, 2, 3}  # += don't exist, neither .extend()
-a.add(2)  # Single elem only
-a.remove(2)
-a.pop() # Choose random elem
-# Other ops &= (intersection), ^= (exclude comuns), -=
-# set can be compared (<: incude, <=, .isdisjoint(other))
 
 def __hash__(self): # Custom hash, by default hash(f(id(obj)))
     return hash((self.a, self.b))  # tuple are hashable
