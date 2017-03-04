@@ -213,7 +213,7 @@ void func(T&& t) {
 // rvalue: t: T  ( f(4.f), f( f2() )  t -> float
 // lvalue: t: T& ( f(x) )             t -> float&
 
-Reference collapsing rule:
+// Reference collapsing rule:
 // If & present, will always give & ex: & && -> &
 // Otherwise: && && -> &&
 // ex: T&& (with T=int&) == int& && == int&
@@ -344,6 +344,7 @@ decimal.Decimals('3.142342423452')
 // using (C++11: better) vs typedef (old)
 typedef void (&FuncType)(int,int);
 using FuncType = void(int,int);
+using WorldMap = std::vector<Cell>; // Type alias
 template <typename T> using MyType = Whatever<T>;  // Works with template too
 
 10u // Unsigned
@@ -554,6 +555,8 @@ std::list<T> l = {1, 2, 3}; // Double linked list (O(1) time remove any elem)
 std::deque<T> l; // O(1) time for random access
 std::forward_list<T> l; // C++11
 
+std::stack<T, Container> s;  // Default container is std::deque
+std::queue<T, Container> q;  // Same
 === java
 Stack<Item> s;
 = s.pop()
@@ -582,11 +585,17 @@ x = q.popleft()  # or appendleft
 ===============================================
 ====== HashTable
 === cpp
-// Keep order (o(logn)) retrieval
+// Keep elems sorted (o(logn)) retrieval (balanced binary tree)
+std::set<string> set;  // Sorted using specific order. Ex: set{2,5,4,1} // order is 1,2,4,5
 std::map<string, int> map;
+std::multiset<int> mset;  // Allows same key multiple times (a,a,a,b)
+std::multimap<int> mmap;
+// Sorted version possess hint versions of insert,... to speed-up look-up
 
-// Hash table: o(1) lookup
+// Hash versions (C++11): o(1) lookup
+std::unordered_set<string> uset;
 std::unordered_map<string, int> umap;
+// unsorted_multi*<> also exits
 
 
 // Check elem presence
@@ -681,20 +690,43 @@ collections.defaultdict(factory)  # Use factory() to initialize elem if not exit
 def __hash__(self): # Custom hash, by default hash(f(id(obj)))
     return hash((self.a, self.b))  # tuple are hashable
 ===============================================
-====== Other
+====== Tuple
 === cpp
 // Structure binding (works with tuple, struct, pair)
 // unpack the tuple into individual variables declared at the call site
 auto [ i, s ] = std::make_tuple(123, 'test'); // C++ 17
 === java
 === python
-# Tuple:
+# Tuples (brace are superfluous when no ambiguity):
 (a,e,t)
 (singleton,)  # Warning: ending comma ,
+()  # Empty tuple (Not (,) )
 
 # namedtuple
 Color = collections.namedtuple('Color', ['r', 'g', 'b'])
 c = Color(255, 0, 124)
+===============================================
+====== Heap
+=== cpp
+// Heap (max by default)
+std::priority_queue<T, Compare=std::less>
+
+// Can control the comparator by overloading
+bool myComparator(const T&, const T&);
+// Default comparators
+std::less // vs std::greater
+=== java
+=== python
+# Turn list into min-heap
+h = [4, 2, 7]
+heapq.heapify(h)
+heapq.heappush(h, 5)
+x = heapq.heappop(h)  # Raise IndexError if empty
+# heappushpop to combine push and pop in single operation (heapreplace for pop then push)
+
+# For max-heap:
+# Hidden heapq._heapify_max() functions exists for the max heap
+# Or hack is to push -x instead of x
 ===============================================
 ====== Common collections methods
 === cpp
