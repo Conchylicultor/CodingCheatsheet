@@ -377,6 +377,11 @@ f'{value+1} {}'  # python 3.6
 === cpp
 // Associativity: Usually left to right: (((a+b)+c)+d) or ((a<<b)<<c)
 
+// Warning: % operator don't behave as Python for negatives numbers
+assert(-1 % 7 == -1);  // Negative stays negative
+assert(-8 % 7 == -1);  // 6 in Python
+int pos = ((x % M) + M) % M;  // To get positive number
+
 // Binary ops:
 // AND: &
 // OR: |
@@ -404,6 +409,9 @@ bool operator >=(const T& other) const; // WARNING: Don't forget const when nece
 === python
 # As C++, most ops are left-associative
 # ((a * b) // c) or ((a**b)**c)
+
+// Warning: % operator don't behave as C++ for negatives numbers
+assert -1 % 7 == 6
 
 **  # __pow__
 /  # __truediv__ (diff between 2.6 and py 3)
