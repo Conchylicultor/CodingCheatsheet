@@ -583,7 +583,7 @@ x = q.popleft()  # or appendleft
 ===============================================
 ====== HashTable
 === cpp
-/ Keep order (o(logn)) retrieval
+// Keep order (o(logn)) retrieval
 std::map<string, int> map;
 
 // Hash table: o(1) lookup
