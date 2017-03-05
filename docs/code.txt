@@ -234,6 +234,27 @@ public static <T> void f(T[] t)
 # import typing # for collection aliases
 def a(var: str, l: List) -> int:
     return 12
+
+# Variable number of argument:
+# *args (tuple), **kwargs (dict)
+l = [*'abcd']  # l = ['a', 'b', 'c', 'd']
+
+===============================================
+====== Import statements/macro
+=== cpp
+// Include guards
+#ifndef
+#undef  // Sometimes useful
+
+// Macro
+# // Stringify operator
+## // Macro concatenation
+=== java
+=== python
+import module as alias
+from module import Class, fct
+import folder.subfolder  # Relative path from the root script
+__init__.py  # Executed when the folder gets imported
 ================================================================================
 ========= Primitives, operators
 ===============================================
@@ -490,6 +511,13 @@ b = lambda x : 3  # Same but PEP8 discourage the use of lambda (stack trace more
 
 # Equivalent of std::bind
 new_fct = functools.partial(fct, arg1, arg2, pos=arg3)
+
+@decorators
+def deco(f):
+    @functools.wraps(f)  # Optional but recommended (will forward docstring __doc__ and name __name__)
+    def new_f(...):  # For more complex behavior can be a class which overload __call__
+       ...
+    return new_f
 ================================================================================
 ========= Collections
 ===============================================
@@ -503,6 +531,7 @@ new_fct = functools.partial(fct, arg1, arg2, pos=arg3)
 
 while(v.begin() != v.end()){} // Warning: != and not <
 v.rbegin() // Reverse iterator (should be compared with .rend())
+.begin() + 3  // .at(0+3)
 === java
 // implement Iterable, override:
 // .iterator()
@@ -736,23 +765,140 @@ x = heapq.heappop(h)  # Raise IndexError if empty
 ====== Common collections methods
 === cpp
 .clear()
+.size()
+
+.at(i) (safer) or operator []
+.front()
+.back()
+.insert( v.begin()+i, Obj() )
+v.erase(v.end()-1)
+.push_front(a) // Don’t exist for vector
+.push_back(a)
+.pop_front()
+
+// The emplace operations avoid the copy construction of the object
+template< class... Args >
+.emplace(const_iterator pos, Args&&... args); //
+.emplace_back(“sd”);
+
+.find(elem) // Return an iterator (ex: if(v.find(3) == v.end()) )
+.count(elem)
 
 === java
+.isEmpty();
+.add(Obj)
+
+.length // if declared with int[] a;
+.size(); // For java.collections
+
+.clear()
+
+.contains(yourValue)
+.indexOf(Obj) // or -1
 === python
+[i]
+[0]
+[-1]  # Last
+.append(a)
+.appendleft(a) # deque
+.insert(i, a)
+
+.pop()
+.popleft() # deque
+
+len(list) (or .__len__() )
+
 ===============================================
 ====== Utilities
 === cpp
 #include <algorithm>
+
+// Map fct (not the std::map<K, V>)
+std::transform (v.begin(), v.end(), dest.begin(), fct);
+
+// Parallel versions of those function exists in experimental
+
+std::for_each(begin(v), end(v), [](const auto& x) {cout << x;} );
+
+int sum = std::accumulate(v.begin(), v.end(), init_v[, op]);
+// Operation example:
+auto op = [](float a, int b) {
+    return a + (float)b;
+})
+// std::reduce also exist and can parallelize ops
+
+// Sort vector
+std::sort(v.begin(), v.end()[, compFct]);
+
+// decltype(compFct) == bool(const T& t1, const T& t2)
+
+// Non modifying
+find
+find_if // Since C++17
+// Search for sub seq [ s_first, s_last)
+search(first,last, s_first, s_last)
+count(first, last, value)
+count_if  // predicate
+adjacent_find // bool pred(a, b)
+
+std::upper_bound // iter on first value greater than the given
+
+// Modifying
+// Removing (Warning)
+remove // Don't change container size. all elements are moved, except some skipped (end will be invalid)
+remove_if (Erase–remove idiom):
+auto it = remove(v.begin(), v.end(), value); // Last elem
+v.erase(it, v.end);
+
+// Rearanging elems
+std::partition(beg, end, bool(elem) ) // Reorder elems such as all element for which pred() return true are before the others
+stable_partition // keep same relative order (alog either in n or n*logn if not enough space)
+
+std::rotate(first, n_first, last) // n_first become first and n_first-1 becomes last
+
+stable_sort // Conserve previous sort (ex: artist, album, year)
+
+bool std::next_permutation(v.beg, v.end) // From a sorted state, will repeativelly rearange the elements such as it will generate all permutations (return false when finished)
+
+std::find(v.begin(), v.end(), x) != v.end()
+std::make_heap // Rearrange elems (first top)
 === java
 === python
+map(lambda x : x+1, [1, ,2, 3])
+sum = functools.reduce(lambda x,y : x+y, [1,2,3])  # Optional additional init_value
+
+sorted(v, key=lambda x:x.v, reversed=True)
+.sort()  # In-place, return None
+reversed(v)
+
+# Warning: map, reversed, range DON’T return list but iterable object
+# Should be converted explicitly !!
+list(map(lambda x:x+1, v))
+
+# In-place version
+.reverse()  # Or reversed(v)
+.sort(key=None, reverse=True)
+.clear()
+
+a in my_list
+i = my_list.index(a) # raise ValueError if not found
+c = my_list.count('a')
+
+# itertools
+.permutations(l, len) # (A,B) et (B,A) differents
+.combinaisons(l, len) # Only (A, B)
+.chain(list1, list2)  # flatMap
+.zip_longest(l1,l2, fill_value) # Add padding
+
+copy.copy(v)
+copy.deepcopy(v)
+
+# Hack to get min, max (not really efficient)
+minv, maxv = sorted((a, b))
+range(*sorted((a, b)))
+
 ================================================================================
 ========= String and I/O
-===============================================
-====== String
-=== cpp
-=== java
-
-=== python
 ===============================================
 ====== Searching
 === cpp
