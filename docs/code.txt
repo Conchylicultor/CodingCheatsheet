@@ -189,7 +189,7 @@ template < <typename> class A> void f(A a);
 
 // Implementation C++
 template <class T>
-Test<T>::fct(){} // WARNING: Don’t forget the <>
+Test<T>::fct(){} // WARNING: Don't forget the <>
 
 // Warning: when referencing a non static member type
 using Type = typename T::m_x; // DON'T forget typename
@@ -229,6 +229,11 @@ public static <T> void f(T[] t)
     System.out.println(t.length);
 }
 === python
+# Type hint:
+# '->' is a fct annotation (None for void, Callable[[Arg1Type, Arg2Type], ReturnType] for fcts)
+# import typing # for collection aliases
+def a(var: str, l: List) -> int:
+    return 12
 ================================================================================
 ========= Primitives, operators
 ===============================================
@@ -694,7 +699,7 @@ def __hash__(self): # Custom hash, by default hash(f(id(obj)))
 === cpp
 // Structure binding (works with tuple, struct, pair)
 // unpack the tuple into individual variables declared at the call site
-auto [ i, s ] = std::make_tuple(123, 'test'); // C++ 17
+auto [ i, s ] = std::make_tuple(123, "test"); // C++ 17
 === java
 === python
 # Tuples (brace are superfluous when no ambiguity):
@@ -730,8 +735,171 @@ x = heapq.heappop(h)  # Raise IndexError if empty
 ===============================================
 ====== Common collections methods
 === cpp
+.clear()
+
 === java
 === python
+===============================================
+====== Utilities
+=== cpp
+#include <algorithm>
+=== java
+=== python
+================================================================================
+========= String and I/O
+===============================================
+====== String
+=== cpp
+=== java
+
+=== python
+===============================================
+====== Searching
+=== cpp
+char *hello = "hello"; // Finish by '\0'
+
+strlen() + 1 // strlen (or .size()) don’t count '\0'
+strcpy()
+
+// Searching (return int, NOT iterators)
+find("abc", start_pos=0); // return pos or string::npos for no match
+rfind  // last
+find_first_of("abc") // Any of 'a', 'b' or 'c'
+find_last_not_of
+.compare(str); // return 0, <0 or >0
+.compare(start, len (= string::npos for end), str2);
+
+// string_view for C++17 (TODO)
+=== java
+boolean b = s.equals(other); // Warning: == compare reference
+
+char a = s.charAt(2);
+s.length();
+b = s.contains(other);
+int a = s.indexOf("pattern");
+=== python
+s[2]
+s2 = s[0:len(s2)]
+len(s)
+b = s2 in s
+
+# Built-in
+ord('a')  # char->int
+chr(68)  # int->char
+===============================================
+====== Modifying
+=== cpp
+.push_back(char)
+.append(std::string)
+
+s.substr(0, pos);
+=== java
+String s = new String("hello");  // Cst. for mutable, use StringBuilder
+
+// StringBuilder
+.append(val) // char, bool, float,...
+.insert(index, val) // Same
+
+String[] list = s.split(", ");
+
+s2 = s.concat(new String("other"));
+s2 = s.substring(0, s.length());
+=== python
+# Warning: str primitive in python (cst)
+s += 'abc'  # s becomes a different object (alias of s not modified)
+
+my_list = s.split(', ')
+', '.join(["abc", "def"])
+# Just split the first occurrence
+(head, separator, tail) = s.partition(', ')  # ('a', ',' , 'b,c,d')
+
+.lower()
+.upper()
+
+s.rstrip('-')  # Remove right padding. Variant: strip (both side) and lstrip. Default value: ' '
+===============================================
+====== Casting
+=== cpp
+int a = std::stoi("123");
+std::string b = std::to_string(a);
+=== java
+int a = Integer.parseString("123");
+String b = String.parseInt(a);
+=== python
+a = int("123")
+b = str(a)
+===============================================
+====== Raw string/formatting
+=== cpp
+R"delimiter(no escape here, even ", \ or \n,)delimiter"
+=== java
+=== python
+r'raw string: no \ escape except \' ' # byte string
+'escape needed \\'
+u'unicode' # default since Python 3
+f'format str {var}'
+
+# TODO: Refactor alternate representation section
+
+# multi line: ''' tree commas '''
+===============================================
+====== File/Streams
+=== cpp
+// Concept of stream
+// Basic classes:
+std::istream // >> val;
+std::ostream // << 33;
+std::ifstream // File version
+std::ofstream
+std::istringstream // String version
+std::ostringstream // .str() to flush
+
+// Binary write (vs semantic << )
+.write(char*, len)
+.put(char)
+
+// Read
+char c = s.peek() // Do not move the cursor
+.get(char&) or char c = s.get()
+.get(string&, char delimiter) // delim not extracted (unlike get_line which capture '\n')
+.unget() // Replace 1 previously fetched character on the stream
+.read(char*buff, int len)  # Read byte
+
+std::getline(istream, std::string[, char delim])  // return itself, is ::operator bool() evaluated to false when EOS
+
+// Error when reading:
+std::eofbit
+std::failbit
+
+.open() // and .is_open()
+.close()
+=== java
+=== python
+with open('f.txt') as f:
+    l = f.readlines()
+    # Or:
+    for line in f:
+        pass
+    # Or:
+    r = f.read(size)  # if not size, read all
+
+with open('/tmp/records.log', 'w') as f:
+    f.write("test\n")
+
+# Open modes:
+# r:
+# w: Erase previous content
+# a: Add at the end
+# +: updating (read+write)
+# b: binary mode
+
+pickle  # Save all data
+__reduce__()  # Is called by pickle if implemented
+
+# File manips (TODO: Walk, exists,...)
+path = os.path.join('root', 'folder', 'file.txt')  # Better than + '/' +
+from pathlib import Path # Overload '/' op
+glob.glob('**/*.txt', recursive=True)
 ================================================================================
 ========= Class
 ===============================================
@@ -1003,13 +1171,14 @@ vtables: reference to parents method (which have been overloaded)
 
 // lvalues and rvalues:
 // a is an rvalue, rvalues are temporary objects, so a should not exist after being passed to the function
-void f(T&& a)
-{}
-f(T{}); // Will work
-T b{};
+void f(int&& a);  // Only accept rvalues
+f(int{}); // Will work
+int b{};
 f(b); // Compilation error: Try to pass a lvalue.
 f(std::move(b));  // Forward b as rvalue (b should not be used after that)
-
+void f(int& a);  // Only accept lvalue ( f(4) impossible )
+void f(const int& a);  // Accept both lvalue and rvalue
+// Note that the rules changes when using templates (cf reference collapsing rule)
 
 // Copy elision: Optimize copy/move constructor
 T x = T(T(T())); // only one call to default constructor of T, to initialize x
@@ -1022,6 +1191,10 @@ T f()
     return std::move(t);  // uses T::T(T &&) if defined; error if deleted or inaccessible
     return static_cast<T&>(t)  // uses T::T(T const &)
 }
+
+// constexpr allows to do some computation at compile time
+constexpr int f(){return 3;} // only 1 return statement for C++11
+std::array<T, f()>{}; // Valid (f is constexpr)
 === java
 === python
 # Context managers
