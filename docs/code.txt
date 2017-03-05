@@ -1234,6 +1234,16 @@ def virual_fct(self):
 friend void externalFct(int, char);
 friend class Other;
 // Friends are not inherited
+
+// Singleton: make constructor private
+
+// Copy-and-swap idiom: for assignment constructor (provide strong exception safety: memory allocated before modifying the state of the object (*this), done in the swap operation)
+X& operator=(X other)  // Notice there is no & (copy)
+{
+    // All resources have been allocated. We can update *this
+    swap(other);
+    return *this;
+}
 === java
 === python
 # Mangle variables name (useful to avoid name conflict with child class)
@@ -1312,7 +1322,7 @@ round(x, 2) # Round to 2 decimal points
 ===============================================
 ====== Language specificities
 === cpp
-vtables: reference to parents method (which have been overloaded)
+// vtables: reference to parents method (which have been overloaded)
 
 
 // lvalues and rvalues:
@@ -1341,6 +1351,10 @@ T f()
 // constexpr allows to do some computation at compile time
 constexpr int f(){return 3;} // only 1 return statement for C++11
 std::array<T, f()>{}; // Valid (f is constexpr)
+
+// RAII (Resource acquisition is initialization): Constructor Acquires, Destructor Releases: Object manage its own resources (not necessary bound to variable scope)
+
+// SFINAE (Substitution Failure Is Not An Error): Used for template deduction (of form T::m). Can be used to perform some checking at compile time.
 === java
 === python
 # Context managers
@@ -1355,6 +1369,14 @@ def my_context():
     finally:  # Called even if called return within the context manager
         pass
 
+# Warning: variable scope:
+# Global variables are read only, when used inside function, except if explicitly declared global. Ex:
+x = 4
+def inc_x():
+    global x
+    x += 1
+
+pprint.pprint(stuff)  # Pretty printer (ex: for recursive list [[1][2]])
 ================================================================================
 ========= Other
 ===============================================
