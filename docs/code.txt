@@ -387,18 +387,8 @@ std::string operator "" _w(const char16_t*, size_t);
 === java
 === python
 1_000.0  # _ since python 3.6
-
-'%s %d' % ('hi', 3)  # Old python formatting
-'{} {}'.format('hi', [3, 1])  # 'hi [3, None]'
-f'{value+1} {}'  # python 3.6
-'{var1} {var1} {:.1f} {padded:0>9} {p[key]}'.format(
-    3.14,  # Without the f, it can use  scientific notation: 3e+00
-    padded=123,  # {:>9} pad with space, ^ center, < right pad
-    var1='reused',
-    p={'key':'val'}  # Works with list too and class '{a.attr}'
-)  # 'reused reused 3.1 000000123 val'
-'{{}}'  # Double {{ to escape
-'{:#x}'.format(123)  # '0x7b' ; x for Hex repr, # to add 0x
+0x2F  # Hex
+0b1101  # Binary
 ===============================================
 ====== Operators/Overload
 === cpp
@@ -980,14 +970,31 @@ b = str(a)
 R"delimiter(no escape here, even ", \ or \n,)delimiter"
 === java
 === python
-r'raw string: no \ escape except \' ' # byte string
+r'raw string: no \ escape except \' '
+b'byte string \x8A'  # Converted to str with .decode(encoding='utf-8')
 'escape needed \\'
-u'unicode' # default since Python 3
-f'format str {var}'
+u'unicode support \u0394' # default since Python 3
+'\N{GREEK CAPITAL LETTER DELTA}'  # Using the character name
+'\u0394'  # Using a 16-bit hex value
+'\U00000394'  # Using a 32-bit hex value
 
-# TODO: Refactor alternate representation section
 
-# multi line: ''' tree commas '''
+# multi line:
+''' Simply use
+tree commas '''
+
+# String formatting
+'%s %d' % ('hi', 3)  # Old python formatting
+'{} {}'.format('hi', [3, 1])  # 'hi [3, None]'
+f'{value+1} {}'  # python 3.6
+'{var1} {var1} {:.1f} {padded:0>9} {p[key]}'.format(
+    3.14,  # Without the f, it can use  scientific notation: 3e+00
+    padded=123,  # {:>9} pad with space, ^ center, < right pad
+    var1='reused',
+    p={'key':'val'}  # Works with list too and class '{a.attr}'
+)  # 'reused reused 3.1 000000123 val'
+'{{}}'  # Double {{ to escape
+'{:#x}'.format(123)  # '0x7b' ; x for Hex repr, # to add 0x
 ===============================================
 ====== File/Streams
 === cpp
