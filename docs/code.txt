@@ -848,7 +848,7 @@ std::rotate(first, n_first, last) // n_first become first and n_first-1 becomes 
 
 stable_sort // Conserve previous sort (ex: artist, album, year)
 
-bool std::next_permutation(v.beg, v.end) // From a sorted state, will repeativelly rearange the elements such as it will generate all permutations (return false when finished)
+bool std::next_permutation(v.beg, v.end) // From a sorted state, will repetitively rearrange the elements such as it will generate all permutations (return false when finished)
 
 std::find(v.begin(), v.end(), x) != v.end()
 std::make_heap // Rearrange elems (first top)
@@ -878,7 +878,7 @@ c = my_list.count('a')
 .permutations(l, len) # (A,B) et (B,A) differents
 .combinaisons(l, len) # Only (A, B)
 .chain(list1, list2)  # flatMap
-.zip_longest(l1,l2, fill_value) # Add padding
+.zip_longest(l1, l2, fill_value) # Add padding
 
 copy.copy(v)
 copy.deepcopy(v)
@@ -1140,7 +1140,22 @@ class A(B, C, metaclass=D):
         def __call__(cls, *args,**kwargs):
             return super().__new__(meta, name, bases, dct)
 
-# Warning: The super method name resolution order for python inheritance is different from C++. By calling super, you can call a method that you don't directly inherit.
+# Warning: The super method name resolution order for python inheritance is different from C++. By calling super, you can call a method that you don't directly inherit (can be used for dependency injection).
+Child.__mro__  # Return the method resolution order (tuple of class)
+(<class '__main__.Child'>, <class '__main__.Parent'>, <type 'object'>)
+Child.mro()  # Same but return list. Called at class instantiation and can be overwritten by metaclass
+
+# Python use C3 linearization rule. Works by iteratively selecting the first head which isn't use in any other tails.
+# Ex: for class A(B,C) where L[B]=BDEO and L[C]=CDFO
+L[A] = A + merge(BDEO, CDFO, BC)  # A + merge(L[B] L[C] [BC])
+     = A + B + merge(DEO, CDFO, C)  # B only used in head. Ok
+     = A + B + C + merge(DEO,DFO)  # cannot be D because was in tail in the second attribute
+     = A B C D E F O  # Rest is trivial
+
+# Note that some class hierarchy are invalid with C3 linearization:
+class C: pass
+class B(C): pass
+class A(C, B): pass  # raise TypeError: Cannot create a consistent mro
 ===============================================
 ====== Static methods
 === cpp
