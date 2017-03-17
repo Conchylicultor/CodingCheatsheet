@@ -720,7 +720,7 @@ def __hash__(self): # Custom hash, by default hash(f(id(obj)))
 // unpack the tuple into individual variables declared at the call site
 auto [ i, s ] = std::make_tuple(123, "test"); // C++ 17
 
-std::pair<> p;
+std::pair<char, int> p;
 p.first
 p.second
 === java
