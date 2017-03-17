@@ -430,10 +430,10 @@ bool operator >=(const T& other) const; // WARNING: Don't forget const when nece
 // Warning: % operator don't behave as C++ for negatives numbers
 assert -1 % 7 == 6
 
-**  # __pow__
-/  # __truediv__ (diff between 2.6 and py 3)
-//  # __floordiv__
-@ # __matmul__ (since 3.5, no built-in implement it)
+def __pow__(self, x):  # **
+def __truediv__(self, x):  # / (diff between 2.6 and py 3)
+def __floordiv__(self, x):  # //
+def __matmul__(self, x): # @ (since 3.5, no built-in implement it)
 divmod(x, y) # return the pair (x // y, x % y)
 
 def __iadd__(self, other): # +=  (i stand for in-place)
@@ -551,7 +551,7 @@ next(gen)  # Execute the function up to the next yield
 ===============================================
 ====== Vector
 === cpp
-std::vector<T> v;
+std::vector<T> v(size, initial_value);
 std::array<T, N> v; // Since C++11, in practice more trouble (ex:array of array), only use when perfs critical
 
 std::bitset<sizeof(int)*8> bits; // Array of bits
@@ -719,6 +719,10 @@ def __hash__(self): # Custom hash, by default hash(f(id(obj)))
 // Structure binding (works with tuple, struct, pair)
 // unpack the tuple into individual variables declared at the call site
 auto [ i, s ] = std::make_tuple(123, "test"); // C++ 17
+
+std::pair<> p;
+p.first
+p.second
 === java
 === python
 # Tuples (brace are superfluous when no ambiguity):
@@ -793,8 +797,13 @@ template< class... Args >
 .appendleft(a) # deque
 .insert(i, a)
 
+# removing elem for dict, list:
+del d[k]
+.pop([i])  # or .pop(key[, default]) for dict
 .pop()
-.popleft() # deque
+.popleft()  # deque
+.popitem()  # dict, return (key, value)
+# Set .discard(), .remove() & .pop()
 
 len(list) (or .__len__() )
 
@@ -1142,15 +1151,15 @@ class A(B, C, metaclass=D):
 
 # Warning: The super method name resolution order for python inheritance is different from C++. By calling super, you can call a method that you don't directly inherit (can be used for dependency injection).
 Child.__mro__  # Return the method resolution order (tuple of class)
-(<class '__main__.Child'>, <class '__main__.Parent'>, <type 'object'>)
+# ex: (<class '__main__.Child'>, <class '__main__.Parent'>, <type 'object'>)
 Child.mro()  # Same but return list. Called at class instantiation and can be overwritten by metaclass
 
 # Python use C3 linearization rule. Works by iteratively selecting the first head which isn't use in any other tails.
 # Ex: for class A(B,C) where L[B]=BDEO and L[C]=CDFO
-L[A] = A + merge(BDEO, CDFO, BC)  # A + merge(L[B] L[C] [BC])
-     = A + B + merge(DEO, CDFO, C)  # B only used in head. Ok
-     = A + B + C + merge(DEO,DFO)  # cannot be D because was in tail in the second attribute
-     = A B C D E F O  # Rest is trivial
+# L[A] = A + merge(BDEO, CDFO, BC)  # A + merge(L[B] L[C] [BC])
+#      = A + B + merge(DEO, CDFO, C)  # B only used in head. Ok
+#      = A + B + C + merge(DEO,DFO)  # cannot be D because was in tail in the second attribute
+#      = A B C D E F O  # Rest is trivial
 
 # Note that some class hierarchy are invalid with C3 linearization:
 class C: pass
@@ -1273,6 +1282,9 @@ self.__var = 1  # Name outside the class becomes obj._A__var
 
 MyClass.__dict__.keys() == ['_MyClass__var', ...]  # Access all members/attributes of a class
 vars(obj)  # Should be prefered. Return ref on __dict__ . Warning: instances have an updateable __dict__ attribute but not classes
+dir(obj)  # Also look non __dict__ attributes, class and parents class. Return list instead of dict
+# Ex: dir([]) and vars(list) return the same, as vars([]) raise TypeError: must have __dict__ attribute
+# Without arguments, return local scope
 
 hasattr(obj, name)
 getattr(obj, name[, default])
@@ -1280,6 +1292,7 @@ setattr(obj, name, value)  # obj.name = value (create or update)
 delattr(obj, name)  # del obj.name
 
 __slots__ = ['x', 'y']  # Optimize the class (reduce the memory allocation for each instance)
+# Class with slot don't have __dict__ (vars won't works)
 ================================================================================
 ========= Other
 ===============================================
@@ -1342,6 +1355,43 @@ math.isclose(a, b)  # float equality (since 3.4)
 
 round(x, 2) # Round to 2 decimal points
 ===============================================
+====== Other utilities
+=== cpp
+=== java
+=== python
+# Memoization:
+@functools.cache_lru(max_size=None)
+def fct(a,b):  # Warning: All arguments must be hashable (tuple ok but not list)
+    pass
+# Hack for memoization (should use decorator instead)
+def fct(a,b,saved={}):  # saved act like static variable
+    pass
+===============================================
+====== Testing
+=== cpp
+assert(a == true)  # C legacy. Not really recommended
+
+# Common error messages:
+# Discard qualifier (ex: try to modify const)
+=== java
+=== python
+assert a == True, 'Message {}'.format(a)
+
+import unittest
+
+class TestStringMethods(unittest.TestCase):
+   def setUp(self):
+      pass # Run before each test
+
+    # Has to start by test_
+    def test_upper(self):
+        self.assertEqual('foo'.upper(), 'FOO')
+
+    def test_isupper(self):
+        self.assertTrue('FOO'.isupper())
+        self.assertListEqual([1,2], [1,2])
+unittest.main()  # Run all test cases
+===============================================
 ====== Language specificities
 === cpp
 // vtables: reference to parents method (which have been overloaded)
@@ -1379,6 +1429,8 @@ std::array<T, f()>{}; // Valid (f is constexpr)
 // SFINAE (Substitution Failure Is Not An Error): Used for template deduction (of form T::m). Can be used to perform some checking at compile time.
 === java
 === python
+# No overloading. Possible to use tricks to count number of passed arguments or to deduce argument type
+
 # Context managers
 with MyContext() as c:  # Call MyContext.__enter__ and .__exit__
    pass
