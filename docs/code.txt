@@ -896,6 +896,9 @@ copy.deepcopy(v)
 minv, maxv = sorted((a, b))
 range(*sorted((a, b)))
 
+# Check condition on entire list
+any(x.endswith('.png') for x in my_list)
+all(my_iterable)
 ================================================================================
 ========= String and I/O
 ===============================================
@@ -1366,6 +1369,8 @@ def fct(a,b):  # Warning: All arguments must be hashable (tuple ok but not list)
 # Hack for memoization (should use decorator instead)
 def fct(a,b,saved={}):  # saved act like static variable
     pass
+
+pprint.pprint(stuff)  # Pretty printer (ex: for recursive list [[1][2]])
 ===============================================
 ====== Testing
 === cpp
@@ -1449,8 +1454,6 @@ x = 4
 def inc_x():
     global x
     x += 1
-
-pprint.pprint(stuff)  # Pretty printer (ex: for recursive list [[1][2]])
 ================================================================================
 ========= Other
 ===============================================
