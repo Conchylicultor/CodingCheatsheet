@@ -1454,6 +1454,30 @@ x = 4
 def inc_x():
     global x
     x += 1
+    
+# More generally: Python closures
+glob_x = None
+def fct():
+    global glob_x
+    glob_x = 123
+
+    # nonlocal: Bound local to closest scope (but not global)
+    loc_x = None
+    def inner():
+         nonlocal loc_x  # python 3 only
+         loc_x = 456  # Reassigning x is now possible
+
+    class Outer: pass  # Other trick: use a container class
+    def inner2():
+         Outer.x = 789
+
+    inner()  # Call to inner modify outer scope
+    inner2()  # Would still works if `return inner2` then `f = fct()` then `f()`
+
+    print(loc_x, Outer.x)  # 456 789
+print(glob_x)  # 123
+
+# Other rules for closure: No new scope for if, with, for, while
 ================================================================================
 ========= Other
 ===============================================
