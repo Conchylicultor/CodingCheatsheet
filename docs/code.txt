@@ -1454,7 +1454,7 @@ x = 4
 def inc_x():
     global x
     x += 1
-    
+
 # More generally: Python closures
 glob_x = None
 def fct():
@@ -1478,6 +1478,26 @@ def fct():
 print(glob_x)  # 123
 
 # Other rules for closure: No new scope for if, with, for, while
+
+# Name scope resolution
+def outer():
+    def inner():
+        print(x)  # x name will be resolved when the function is called.
+        print(y)  # Works with global too. Won't crash if y is declared before the function is called
+        # print(z)  # NameError: free variable 'z' referenced before assignment in enclosing scope
+    x = 'inside'
+    if False:
+        z = 'never'  # Even if z in never declared, will prevent the variable name resolution to go further
+    return inner
+
+z = 'global'
+f = outer()  # x fixed. y still unresolved
+x = 'outside'
+y = 'glob_1'
+f()  # print 'inside', 'glob_1': the resolution is done with respect to the scope where the function has been declared
+y = 'glob_2'
+f()  # print 'inside', 'glob_2'
+
 ================================================================================
 ========= Other
 ===============================================
