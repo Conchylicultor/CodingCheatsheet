@@ -1374,10 +1374,10 @@ pprint.pprint(stuff)  # Pretty printer (ex: for recursive list [[1][2]])
 ===============================================
 ====== Testing
 === cpp
-assert(a == true)  # C legacy. Not really recommended
+assert(a == true)  // C legacy. Not really recommended
 
-# Common error messages:
-# Discard qualifier (ex: try to modify const)
+// Common error messages:
+// Discard qualifier (ex: try to modify const)
 === java
 === python
 assert a == True, 'Message {}'.format(a)
