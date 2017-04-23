@@ -125,8 +125,9 @@ null
 // WARNING: == compare refs, not values (ex: String). No operators overloading
 === python
 # Comparison `==` (equality) vs `is`(reference)
-# Immutable exists only once (except tuple)
-'hello' is 'hello'  # True
+# With C-Python, numbers from -5 to 256 have unique id
+n = 123
+assert n is 123
 
 r = weakref.ref(my_obj)  # Return ref on the item but doesn't count  for garbage collector. Used for cached variable (don't want to keep them alive just because of the cache)
 assert r is my_obj.__weakref__
@@ -265,6 +266,8 @@ import module as alias
 from module import Class, fct
 import folder.subfolder  # Relative path from the root script
 __init__.py  # Executed when the folder gets imported
+
+# import scope rules are same as variables: import within 'if' is visible outside the scope, import inside function is local
 ================================================================================
 ========= Primitives, operators
 ===============================================
@@ -292,6 +295,12 @@ s = 'Hello'
 z = complex(1, 4)  # = 1 + 4j
 
 # Types: bool, str, int, float, list, tuple, dict, set,...
+
+# Python 'and' and 'or' return one of their operand (the last one which needs to be evaluated). Ex:
+a = 'hello' or 123  # a == 'hello'  (used to set default value)
+b = 0 or []  # b == []
+c = 1 and 2  # c == 2
+d = v and v.pop()  # d == [] ; or d = v[-1]
 ===============================================
 ====== Enum
 === cpp
@@ -467,6 +476,7 @@ def __getitem__(self, item):  # For x['a',...,3:5]
     # item can be a tuple of the passed arguments, ex: ('a', Ellipsis, slice(3,5,None))
     # Can check if args contains Ellipsis object (same as ...)
     # x:y are converted into `slice` objects (slice(start=, end=, step=))
+    # my_obj[:] is equivalent to item==slice(None, None, None)
 
 # __index__() is called by slice to convert objects (ex: np.int32) into int. This operator has been added instead of __int__ to avoid slice with float numbers
 ===============================================
@@ -807,9 +817,14 @@ template< class... Args >
 .contains(yourValue)
 .indexOf(Obj) // or -1
 === python
-[i]
-[0]
-[-1]  # Last
+l[i]
+l[0]
+l[-1]  # Last
+# Slice act as range (last elem not included, even when reversed)
+l[len(l)-1::-1]  # Include first elem
+l[len(l)-1:0:-1]  # First elem excluded
+l[-2:-1]  # equivalent to l[-2] (Last elem excluded)
+l[-len(l)-10:len(l)+10]  # For list, an out of range slice won't make the program crash
 .append(a)
 .appendleft(a) # deque
 .insert(i, a)
@@ -887,7 +902,9 @@ sorted(v, key=lambda x:x.v, reversed=True)
 .sort()  # In-place, return None
 reversed(v)
 
-# Warning: map, reversed, range DON’T return list but iterable object
+iter_filtered = filter(lambda x: bool(x), iterable)  # Only keeps elem where the fct return True
+
+# Warning: map, reversed, range, filter DON’T return list but iterable object
 # Should be converted explicitly !!
 list(map(lambda x:x+1, v))
 
@@ -1083,12 +1100,14 @@ with open('/tmp/records.log', 'w') as f:
 # b: binary mode
 
 pickle  # Save all data
-__reduce__()  # Is called by pickle if implemented
+__reduce__()  # Is called by pickle if implemented (allow custom classes to be pickled (saved and reconstructed))
 
 # File manips (TODO: Walk, exists,...)
 path = os.path.join('root', 'folder', 'file.txt')  # Better than + '/' +
 from pathlib import Path # Overload '/' op
 glob.glob('**/*.txt', recursive=True)
+
+os.pardir  # Constant equivalent to '..', useful to combine with os.path.join and os.path.normpath or os.path.abspath
 ================================================================================
 ========= Class
 ===============================================
@@ -1393,6 +1412,15 @@ def fct(a,b):  # Warning: All arguments must be hashable (tuple ok but not list)
 # Hack for memoization (should use decorator instead)
 def fct(a,b,saved={}):  # saved act like static variable
     pass
+
+# Python eval takes two arguments for safety to restrict the uses of global/local variables
+eval(code, {'__builtins__':None}, {})  # Deactivate all namespace (even build-in)
+# For saver eval:
+x = ast.literal_eval('[None, 4.56]')  # Don't works with type ( literal_eval('int') )
+
+with contextlib.closing(A()) as obj:  # Call obj.close()  at the end
+	pass
+# Does obj still exist in local scope
 
 pprint.pprint(stuff)  # Pretty printer (ex: for recursive list [[1][2]])
 ===============================================
