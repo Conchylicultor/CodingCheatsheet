@@ -1535,6 +1535,9 @@ with threading.Lock() as l:
     pass
 with l:
     pass
+for i in range(10):
+    pass
+print(i)  # i exist outside for scope and equal to last value (here 9)
 
 # Name scope resolution
 def outer():
@@ -1554,6 +1557,13 @@ y = 'glob_1'
 f()  # print 'inside', 'glob_1': the resolution is done with respect to the scope where the function has been declared
 y = 'glob_2'
 f()  # print 'inside', 'glob_2'
+
+# Same rules apply for loop:
+for i in range(10):
+    def fct():
+        print(i)  # i is resolved when the function is called (always equal to 9)
+    my_list.append(fct)
+    # Solution: use functools.partial
 
 ================================================================================
 ========= Other
