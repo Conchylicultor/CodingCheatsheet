@@ -127,6 +127,9 @@ null
 # Comparison `==` (equality) vs `is`(reference)
 # Immutable exists only once (except tuple)
 'hello' is 'hello'  # True
+
+r = weakref.ref(my_obj)  # Return ref on the item but doesn't count  for garbage collector. Used for cached variable (don't want to keep them alive just because of the cache)
+assert r is my_obj.__weakref__
 ===============================================
 ====== Exceptions
 === cpp
@@ -198,8 +201,13 @@ using Type = typename T::m_x; // DON'T forget typename
 template<typename... Args>
 void fct(Args... args)
 {
-    h(args...);  // forwards parameters
+    // f(E1, E2, ...)
+    f(args...);  // forwards parameters
+    // f(g(E1,E2) + E1, g(E1,E2) + E2)
+    f(g(args...) + args...);  // TODO: is g evaluated multiples times ? (probably)
+    const std::size_t nb_args = sizeof...(args);
 }
+
 
 // std::move allows to forward a rvalue
 // Perfect forwarding (avoid reference collapsing)
@@ -245,6 +253,8 @@ l = [*'abcd']  # l = ['a', 'b', 'c', 'd']
 // Include guards
 #ifndef
 #undef  // Sometimes useful
+
+#pragma once  // Globally the same as include guards (Not standard but supported by all compilers)
 
 // Macro
 # // Stringify operator
@@ -479,6 +489,11 @@ std::bind : Wrap a function with some of its parameters fixed
 
 std::function<void(int)> f = fct; // Store a function
 auto f = std::bind(fct, 42, std::placeholders::_1);  // Prefer lambda instead
+
+void f(std::vector<int> v)  // Passed by copy (Bad)
+void f(std::vector<int>& v)  // Won't works with rvalues
+void f(std::vector<int>&& v)  // Won't works with lvalues (have to use std::move)
+void f(const std::vector<int>& v)  // Passed by const ref (best). Works with both lvalues and rvalues
 === java
 // Anonymous classes
 someObject.addMouseListener(new MouseAdapter() {
@@ -713,6 +728,8 @@ collections.defaultdict(factory)  # Use factory() to initialize elem if not exit
 
 def __hash__(self): # Custom hash, by default hash(f(id(obj)))
     return hash((self.a, self.b))  # tuple are hashable
+
+# Immutable objects like frozenset and tuple (not set nor list) are hashable and can be used as dict key
 ===============================================
 ====== Tuple
 === cpp
@@ -938,6 +955,9 @@ chr(68)  # int->char
 # Multi-line string
 ('ab{}ef'  # The string continue on the next line
  'gh'.format('cd'))  # 'abcdefgh'
+
+with contextlib.redirect_stdout(file):
+    print('Written on file')
 ===============================================
 ====== Modifying
 === cpp
@@ -1482,6 +1502,11 @@ def fct():
 print(glob_x)  # 123
 
 # Other rules for closure: No new scope for if, with, for, while
+# That's mean context managers can be reused:
+with threading.Lock() as l:
+    pass
+with l:
+    pass
 
 # Name scope resolution
 def outer():
