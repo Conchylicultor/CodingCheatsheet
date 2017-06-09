@@ -113,6 +113,7 @@ int* a = NULL;  // Legacy
 int* a = 0;
 int* a = nullptr;  // Best (compilation error if try to compare with integer)
 
+std::nullptr_t  // Type of nullptr, allows overload to avoid ambiguity when calling f(nullptr)
 
 const char* a; // ptr on const char
 // VS
