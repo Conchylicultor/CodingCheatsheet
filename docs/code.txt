@@ -400,10 +400,20 @@ template <typename T> using MyType = Whatever<T>;  // Works with template too
 0xFF00
 0b1101'0100 // 0b since C++14
 
-// TODO:
-// Literal operators: Allows conversions (WARNING: NOT MEMBERS, must begin by underscore)
-std::string operator "" _w(const char16_t*, size_t);
-// Use:  u”Hello”_w // (u is for utf16)
+// User defined literals: Allows conversions (can't be member, must begin by underscore)
+constexpr Kilogram operator"" _kg(unsigned long long int v)
+{
+    return Kilogram{v};
+}
+Kilogram k = 123_kg;
+std::string operator "" _w(const char16_t*, size_t);  // u"Hello"_w (u is for utf16)
+std::string operator "" _w(const char*, size_t);  // "Hello"_w (no u prefix)
+std::string operator"" _w(const char*); // 12_w (only integer or floating points)
+// Warning: Only specific signatures allowed (ex: no 'float', just 'long double')
+
+// Some standard literals are defined: ex:
+auto d = 1h + 30min + 2s + 10ms + 20us + 7ns; // From std::chrono::duration
+std::complex<float> x = 2.f + 5.0if;  // From std::complex
 === java
 === python
 1_000.0  # _ since python 3.6
@@ -657,7 +667,7 @@ std::unordered_map<string, int> umap;
 .emplace(std::make_pair(k, v)); // converting move constructor
 .emplace(k, v); // uses pair's template constructor
 // Warning: Value initialized if not exist (int:0, bool:false)
-[“key”] = val; // Will create the key if not exist
+["key"] = val; // Will create the key if not exist
 .at(key); // out_of_range exception if not exist
 .erase(k)// Either key, iter or (begin(), end())
 
@@ -801,7 +811,7 @@ v.erase(v.end()-1)
 // The emplace operations avoid the copy construction of the object
 template< class... Args >
 .emplace(const_iterator pos, Args&&... args); //
-.emplace_back(“sd”);
+.emplace_back("sd");
 
 .find(elem) // Return an iterator (ex: if(v.find(3) == v.end()) )
 .count(elem)
