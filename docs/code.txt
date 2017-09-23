@@ -489,6 +489,9 @@ def __getitem__(self, item):  # For x['a',...,3:5]
     # x:y are converted into `slice` objects (slice(start=, end=, step=))
     # my_obj[:] is equivalent to item==slice(None, None, None)
 
+def __missing__(self, key):  # If defined, is called instead of raising a KeyError
+    return None
+
 # __index__() is called by slice to convert objects (ex: np.int32) into int. This operator has been added instead of __int__ to avoid slice with float numbers
 ===============================================
 ====== Functions/lambda
@@ -1059,6 +1062,8 @@ f'{value+1} {}'  # python 3.6
 )  # 'reused reused 3.1 000000123 val'
 '{{}}'  # Double {{ to escape
 '{:#x}'.format(123)  # '0x7b' ; x for Hex repr, # to add 0x
+
+'{key to prepro/cess}, {missing_key:.3f}'.format_map(dict_obj)  # dict_obj functions are called for every keys, allow to do preprocessing on key by subclassing __getitem__, __missing___,...
 ===============================================
 ====== File/Streams
 === cpp
