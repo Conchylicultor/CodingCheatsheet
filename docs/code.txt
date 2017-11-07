@@ -1353,6 +1353,13 @@ getattr(obj, name[, default])
 setattr(obj, name, value)  # obj.name = value (create or update)
 delattr(obj, name)  # del obj.name
 
+def __getattr__(self, name):  # Is called if not hasattr(self, name)
+  # If __getattribute__ is also set, __getattr__ only gets called if __getattribute__ raises AttributeError
+
+def __getattribute__(self, name):  # Always called (even for __dict__, or self.somthing)
+  # Can be used to prevent access to members, by filtering some names
+  super().__getattribute__(name)  # Call super as self.something would create infinite recursion
+
 __slots__ = ['x', 'y']  # Optimize the class (reduce the memory allocation for each instance)
 # Class with slot don't have __dict__ (vars won't works)
 ================================================================================
